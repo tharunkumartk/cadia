@@ -1,8 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from "axios";
 import { Card } from "../engine/Card";
 
-const BASE_URL = "http://localhost:3001";
+// confusing, should change later
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://cadia-xyz.herokuapp.com/";
 
 interface LeaderboardData {
   displayName: string;
@@ -28,7 +28,13 @@ const getLeaderboardData = (scoreCount: number) => {
 };
 
 // pushing a new leaderboard score
-const pushLeaderboardData = (name: string, score: number, walletId: string) => {
+interface PushLeaderboardDataProps {
+  name: string;
+  score: number;
+  walletId: string;
+}
+
+const pushLeaderboardData = ({ name, score, walletId }: PushLeaderboardDataProps) => {
   axios
     .post(`${BASE_URL}/leaderboard`, {
       name: { name },

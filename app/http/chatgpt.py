@@ -1,7 +1,7 @@
 import random
 from flask import Blueprint, request
 import openai
-from flaskr.config.openai import OPENAI_KEY
+from app.config.openai import OPENAI_KEY
 
 chatgpt = Blueprint("chatgpt", __name__)
 
