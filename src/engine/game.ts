@@ -173,7 +173,7 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
             if (newPlayers[id].active == false) {
                 continue;
             }
-            if (newRound[id].current_bet != lowestPlayerBet) {
+            if (newRound[id].current_bet > lowestPlayerBet) {
                 newPlayers[id].balance += newRound[id].current_bet - lowestPlayerBet ;
                 newRound[id].current_bet = lowestPlayerBet;
             }
@@ -232,11 +232,10 @@ export function call(gameState: GameState, index:number, setGameStateHelper: Fun
     if(!gameState.round.length) throw new Error("Game round not started");
     let max_current_bet =gameState.round.slice(0).sort((a,b)=>b.current_bet-a.current_bet)[0].current_bet;
     if (gameState.round[index].current_bet >= max_current_bet) throw new Error("Cannot call with a current bet greater than or equal to the maximum current bet");
+    if (gameState.players[index].balance == 0) throw new Error("Cannot call with a balance of 0");
     let amount_to_call = max_current_bet - gameState.round[index].current_bet;
-    if(gameState.players[index].balance < amount_to_call && gameState.players[index].balance > 0) 
-        throw new Error('Insufficient balance to call');
     /* player all-in */
-    if (gameState.players[index].balance < amount_to_call) {
+    if (gameState.players[index].balance < amount_to_call && gameState.players[index].balance > 0) {
         amount_to_call = gameState.players[index].balance;
     }
     let newRound = gameState.round;
