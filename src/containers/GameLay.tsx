@@ -438,10 +438,10 @@ const GameLay = () => {
     );
     const ChatGPTAction = ChatGPTResp.bet;
     // updating the messages
-    // const updMessages = messageData;
-    // updMessages.push({ message: ChatGPTResp.response, sent: false });
-    // setMessageData(updMessages);
-    addMessageHelper({ message: ChatGPTResp.response, sent: false })
+    const updMessages = messageData;
+    updMessages.push({ message: ChatGPTResp.response, sent: false });
+    setMessageData(updMessages);
+    // addMessageHelper({ message: ChatGPTResp.response, sent: false })
     console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
     if (ChatGPTAction === -1) {
@@ -461,7 +461,7 @@ const GameLay = () => {
   }
 
   const updateChatGPTPromptMessage = async () => {
-    // const updMessages = messageData;
+    const updMessages = messageData;
     const pastRounds = gameState.roundStates.map((round) => round[0].current_bet);
     const newMessage = {
       message: await getChatGPTPrompt(
@@ -477,9 +477,9 @@ const GameLay = () => {
       sent: true,
     };
     console.log(`prompt${newMessage.message}`); 
-    // updMessages.push(newMessage);
-    // setMessageData(updMessages);
-    addMessageHelper(newMessage);
+    updMessages.push(newMessage);
+    setMessageData(updMessages);
+    // addMessageHelper(newMessage);
   };
   React.useEffect(() => {
     console.log("line 431 checking gameState", gameState, "chatgpt turn is ", gameState.ChatGPTTurn);
