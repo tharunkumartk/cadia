@@ -1,8 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from "axios";
 import { Card } from "../engine/Card";
 
-const BASE_URL = "http://localhost:3001";
+// confusing, should change later
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "http://localhost:8000";
 
 interface LeaderboardData {
   displayName: string;

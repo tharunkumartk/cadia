@@ -10,8 +10,11 @@ def get_score():
     Returns a list of the top num_scores from highest to lowest in the tuple form
     ('name', 'score', 'wallet_address')
     """
-    score_limit = int(request.args.get("count"))
-    if score_limit <= 0:
+    try:
+        score_limit = int(request.args.get("count"))
+        if score_limit <= 0:
+            score_limit = 10
+    except TypeError:
         score_limit = 10
 
     # Returns a list of the top num_scores from highest to lowest in the tuple form

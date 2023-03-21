@@ -8,6 +8,7 @@ flask = "*"
 firebase-admin = "*"
 flask-cors = "*"
 openai = "~=0.27.0"
+gunicorn = "*"
 
 [dev-packages]
 
