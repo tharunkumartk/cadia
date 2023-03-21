@@ -1,7 +1,9 @@
 import * as React from "react";
 import { useLocation, Navigate } from "react-router-dom";
+import axios from "axios";
 import { getDisplayName } from "../helpers";
 import { UserContext } from "./UserContext";
+// import { getHolders } from "../utils/APIConnection";
 
 interface RequireAuthProps {
   children: React.ReactNode;
@@ -12,8 +14,6 @@ export default function RequireAuth({ children }: RequireAuthProps) {
   const { currentUser, isLoading } = React.useContext(UserContext);
 
   const [holders, setHolders] = React.useState<any>(undefined);
-
-  const url = "https://openfund.com/api/v0/top-dao-holders/Cadia?sort_type=wealth&purchased_only=true&limit=1000000";
 
   // all of a type user which we should code in later, just leaving as any for now
   // https://docs.deso.org/deso-backend/api
@@ -35,9 +35,15 @@ export default function RequireAuth({ children }: RequireAuthProps) {
 
   React.useEffect(() => {
     const getHolders = async () => {
-      const data = await fetch(url, { mode: "cors" });
-      const json = await data.json();
-      setHolders(json?.Hodlers);
+      const res = await axios.get<any>("https://openfund.com/api/v0/top-dao-holders/Cadia", {
+        params: {
+          sort_type: "wealth",
+          purchased_only: true,
+          limit: 1000000,
+        },
+      });
+      const { data } = res;
+      setHolders(data?.Hodlers);
     };
 
     getHolders();
