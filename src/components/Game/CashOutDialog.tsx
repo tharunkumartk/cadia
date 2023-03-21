@@ -5,7 +5,7 @@ import Slide from "@mui/material/Slide";
 import ConfirmCashOut from "../../assets/Game/ConfirmCashOut.svg";
 import ExitCashOut from "../../assets/Game/ExitCashOut.svg";
 import { pushLeaderboardData } from "../../utils/APIConnection";
-import { UserContext } from "../../contexts";
+import { UserContext } from "../../config/UserContext";
 
 interface CashOutDialogProps {
   open: boolean;

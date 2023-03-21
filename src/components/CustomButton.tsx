@@ -5,13 +5,15 @@ import MaskedText from "./MaskedText";
 
 interface CustomButtonProps {
   text: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
-const CustomButton = ({ text, onClick }: CustomButtonProps) => {
+const CustomButton = ({ text, onClick, disabled = false }: CustomButtonProps) => {
   return (
     <Grid item xs={4} sx={{ margin: "auto" }}>
       <Button
+        disabled={disabled}
         onClick={onClick}
         sx={{
           backgroundImage: `url(${BaseButton})`,
@@ -20,6 +22,9 @@ const CustomButton = ({ text, onClick }: CustomButtonProps) => {
           backgroundPosition: "center",
           width: "15vw",
           height: "20vh",
+          filter: disabled
+            ? "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#grayscale\")"
+            : "none",
         }}
       >
         <MaskedText text={text} fontSize="1.25rem" />

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as React from "react";
 import { Button, Grid, Typography, IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import PokerTableImage from "../assets/pokertable.svg";
 import GoldPotImg from "../assets/goldpot.svg";
@@ -36,7 +35,6 @@ import GameEnd from "../components/Game/GameEnd";
 // import MaskedText from "../components/MaskedText";
 
 // implement
-// export const [messageData, setMessageData] = React.useState<Message[]>([]);
 const GameLay = () => {
   const bigBlindAmount = 10;
   const userIndex = 1;
@@ -80,6 +78,10 @@ const GameLay = () => {
 
   const setGameStateHelper = (updatedState: Partial<GameState>) => {
     setGameState((state) => ({ ...state, ...updatedState }));
+  };
+
+  const addMessageHelper = (message: Message) => {
+    setMessageData((state) => ({ ...state, message }));
   };
 
   const increaseRoundNumber = () => {
@@ -435,9 +437,10 @@ const GameLay = () => {
     );
     const ChatGPTAction = ChatGPTResp.bet;
     // updating the messages
-    const updMessages = messageData;
-    updMessages.push({ message: ChatGPTResp.response, sent: false });
-    setMessageData(updMessages);
+    // const updMessages = messageData;
+    // updMessages.push({ message: ChatGPTResp.response, sent: false });
+    // setMessageData(updMessages);
+    addMessageHelper({ message: ChatGPTResp.response, sent: false })
     console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
     if (ChatGPTAction === -1) {
@@ -457,7 +460,7 @@ const GameLay = () => {
   }
 
   const updateChatGPTPromptMessage = async () => {
-    const updMessages = messageData;
+    // const updMessages = messageData;
     const pastRounds = gameState.roundStates.map((round) => round[0].current_bet);
     const newMessage = {
       message: await getChatGPTPrompt(
@@ -473,8 +476,9 @@ const GameLay = () => {
       sent: true,
     };
     console.log(`prompt${newMessage.message}`); 
-    updMessages.push(newMessage);
-    setMessageData(updMessages);
+    // updMessages.push(newMessage);
+    // setMessageData(updMessages);
+    addMessageHelper(newMessage);
   };
   React.useEffect(() => {
     console.log("line 431 checking gameState", gameState, "chatgpt turn is ", gameState.ChatGPTTurn);

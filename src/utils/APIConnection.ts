@@ -1,3 +1,4 @@
+import { ScoreSharp } from "@mui/icons-material";
 import axios from "axios";
 import { Card } from "../engine/Card";
 
@@ -9,20 +10,28 @@ interface LeaderboardData {
   score: number;
 }
 
+interface LeaderboardDataStore {
+  created_at: string;
+  name: string;
+  score: number;
+  user_wallet: string;
+}
+
 // gets the leaderboard data from backend. need to update url to local machine
 const getLeaderboardData = (scoreCount: number) => {
   const leaderboardDataReturn: LeaderboardData[] = [];
   axios
-    .get(`${BASE_URL}/leaderboard`, {
+    .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
       params: {
         count: scoreCount,
       },
     })
     .then((res) => {
       console.log(res);
-      const inputFiles = res.data;
-      for (let i = 0; i < inputFiles.length; i += 1)
-        leaderboardDataReturn.push({ displayName: inputFiles[i][0], score: parseInt(inputFiles[i][1], 10) });
+      const scores = res.data;
+      scores.forEach((score: any) => {
+        leaderboardDataReturn.push({displayName: score.name, score: score.score });
+      });
     });
   return leaderboardDataReturn;
 };
