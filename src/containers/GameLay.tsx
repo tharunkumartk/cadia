@@ -33,6 +33,7 @@ import CashOutDialog from "../components/Game/CashOutDialog";
 import ChatGPTUpdate from "../components/Game/ChatGPTUpdate";
 import convertCardstoStrings from "../engine/cardconversion";
 import GameEnd from "../components/Game/GameEnd";
+import BigBlindIndicator from "../assets/BigBlindIndicator.svg";
 // import MaskedText from "../components/MaskedText";
 
 // implement
@@ -472,7 +473,7 @@ const GameLay = () => {
       ),
       sent: true,
     };
-    console.log(`prompt${newMessage.message}`); 
+    console.log(`prompt${newMessage.message}`);
     updMessages.push(newMessage);
     setMessageData(updMessages);
   };
@@ -543,11 +544,16 @@ const GameLay = () => {
       </Grid>
       <Grid container className="actual-table" sx={{ marginTop: "3vh" }}>
         <Grid container sx={{ margin: "0 20vw", justifyItems: "flex-start", alignItems: "center" }}>
-          <Grid item xs={4} sx={{ display: "flex" }}>
+          <Grid item xs={1} sx={{ display: "flex" }}>
             <IconButton aria-label="Settings" onClick={() => setMessageOpen(true)}>
               {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
               <MessageRoundedIcon fontSize="large" sx={{ color: "white" }} />
             </IconButton>
+          </Grid>
+          <Grid item xs={3} sx={{ display: "flex" }}>
+            {gameState.bigBlind_index === 0 && (
+              <img src={BigBlindIndicator} alt="big blind" style={{ width: "15vw" }} />
+            )}
           </Grid>
           <Grid
             item
@@ -694,7 +700,12 @@ const GameLay = () => {
           container
           sx={{ margin: "0 20vw", justifyItems: "flex-start", alignItems: "center", alignContent: "center" }}
         >
-          <Grid item xs={4} sx={{ display: "flex", alignItems: "center" }} />
+          <Grid item xs={1} sx={{ display: "flex", alignItems: "center" }} />
+          <Grid item xs={3} sx={{ display: "flex" }}>
+            {gameState.bigBlind_index === 1 && (
+              <img src={BigBlindIndicator} alt="big blind" style={{ width: "15vw" }} />
+            )}
+          </Grid>
           <Grid item xs={4} className="gpt-bame">
             <Typography
               sx={{
