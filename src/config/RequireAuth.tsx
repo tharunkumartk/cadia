@@ -35,7 +35,7 @@ export default function RequireAuth({ children }: RequireAuthProps) {
 
   React.useEffect(() => {
     const getHolders = async () => {
-      const data = await fetch(url);
+      const data = await fetch(url, { mode: "no-cors" });
       const json = await data.json();
       setHolders(json?.Hodlers);
     };
