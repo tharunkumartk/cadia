@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Grid, Typography, Modal, IconButton } from "@mui/material";
+import { Button, Grid, Typography, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";

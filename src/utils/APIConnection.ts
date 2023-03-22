@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card } from "../engine/Card";
 
 // confusing, should change later
-const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8090" : "https://www.thecadia.xyz";
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
 
 interface LeaderboardData {
   displayName: string;
@@ -48,6 +48,22 @@ const pushLeaderboardData = ({ name, score, walletId }: PushLeaderboardDataProps
     .post(`${BASE_URL}/leaderboard`, {
       name: name,
       score: score,
+      walletId: walletId,
+    })
+    .then((res) => {
+      return res;
+    });
+};
+
+interface PushGameStartProps {
+  name: string;
+  walletId: string;
+}
+
+const pushGameStartData = ({ name, walletId }: PushGameStartProps) => {
+  axios
+    .post(`${BASE_URL}/event/game_start`, {
+      name: name,
       walletId: walletId,
     })
     .then((res) => {
@@ -117,4 +133,4 @@ const getChatGPTResponse = async (
   return value;
 };
 
-export { pushLeaderboardData, getLeaderboardData, getChatGPTResponse, getChatGPTPrompt };
+export { pushLeaderboardData, getLeaderboardData, pushGameStartData, getChatGPTResponse, getChatGPTPrompt };

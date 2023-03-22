@@ -9,7 +9,7 @@ import CommunityCards from "../components/Game/CommunityCards";
 import UserCards from "../components/Game/UserCards";
 import GameButton from "../components/Game/GameButton";
 import CashOutBack from "../assets/cashoutback.svg";
-import { getChatGPTPrompt, getChatGPTResponse } from "../utils/APIConnection";
+import { getChatGPTPrompt, getChatGPTResponse, pushGameStartData } from "../utils/APIConnection";
 import ChatDialog, { Message } from "../components/Game/ChatDialog";
 
 import {
@@ -33,12 +33,15 @@ import ChatGPTUpdate from "../components/Game/ChatGPTUpdate";
 import convertCardstoStrings from "../engine/cardconversion";
 import GameEnd from "../components/Game/GameEnd";
 import BigBlindIndicator from "../assets/BigBlindIndicator.svg";
+import { UserContext } from "../config/UserContext";
 // import MaskedText from "../components/MaskedText";
 
 // implement
 const GameLay = () => {
   const bigBlindAmount = 10;
   const userIndex = 1;
+
+  const { currentUser } = React.useContext(UserContext);
 
   const [raiseOverlayOpen, setRaiseOverlayOpen] = React.useState<boolean>(false);
   const [cashOutDialogOpen, setCashOutDialogOpen] = React.useState<boolean>(false);
@@ -223,6 +226,8 @@ const GameLay = () => {
         index: -1,
       },
     });
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    if (currentUser) pushGameStartData({ name: currentUser["ProfileEntryResponse"]["Username"], walletId: currentUser["PublicKeyBase58Check"] });
   };
 
   /* trigger the first game when user opens the page and trigger later games when this game ends  */
@@ -594,6 +599,7 @@ const GameLay = () => {
                     marginTop: "0.1rem",
                   }}
                 >
+                  {/* TODO: make this a function and call it within the return */}
                   {(() => {
                     switch (gameState.round[1].decision) {
                       case "raise":
