@@ -630,6 +630,7 @@ const GameLay = () => {
           <Grid item xs={2} />
           <Grid item xs={2}>
             <Grid item sx={{ margin: "auto" }}>
+              {/* TODO: make this button a reusable component probably */}
               <Button
                 onClick={() => setCashOutDialogOpen(true)}
                 sx={{

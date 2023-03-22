@@ -48,7 +48,7 @@ const pushLeaderboardData = ({ name, score, walletId }: PushLeaderboardDataProps
     .post(`${BASE_URL}/leaderboard`, {
       name: name,
       score: score,
-      walletid: walletId,
+      walletId: walletId,
     })
     .then((res) => {
       return res;

@@ -11,7 +11,7 @@ import MaskedText from "../MaskedText";
 import CardEntity from "../../assets/cards/CardEntity";
 import { GameState } from "../../engine/game";
 import convertCardstoStrings from "../../engine/cardconversion";
-import CashOutDialog from "./CashOutDialog";
+// import CashOutDialog from "./CashOutDialog";
 import { pushLeaderboardData } from "../../utils/APIConnection";
 import { UserContext } from "../../config/UserContext";
 
@@ -103,6 +103,7 @@ const CashOutButton = ({ userScore }: CashOutButtonProps) => {
 };
 
 const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, result }: GameEndProps) => {
+  // TODO: should return a screen maybe, not just null
   if (gameState.players.length === 0) return null;
   const ChatGPTCards = convertCardstoStrings(gameState.players[1].hand);
   const UserCards = convertCardstoStrings(gameState.players[0].hand);
