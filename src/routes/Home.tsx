@@ -7,7 +7,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import { getDisplayName } from "../helpers";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
-import MaskedText from "../components/MaskedText";
+// import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
 
@@ -78,7 +78,7 @@ const Home = () => {
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            height: "70vh",
+            height: "60vh",
             margin: "20px 0 0 0",
           }}
         />
