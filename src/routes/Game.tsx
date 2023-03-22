@@ -10,7 +10,7 @@ import LeaderboardDialog from "../components/Game/LeaderboardDialog";
 
 const Game = () => {
   const navigate = useNavigate();
-  const [leaderboardOpen, setLeaderboardOpen] = React.useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
 
   return (
     <div>
