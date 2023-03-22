@@ -421,6 +421,7 @@ const GameLay = () => {
     const updMessages = messageData;
     updMessages.push({ message: ChatGPTResp.response, sent: false });
     setMessageData(updMessages);
+    
     // addMessageHelper({ message: ChatGPTResp.response, sent: false })
     // console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
@@ -768,7 +769,6 @@ const GameLay = () => {
         open={cashOutDialogOpen}
         handleClose={() => setCashOutDialogOpen(false)}
         userScore={gameState.players?.[0]?.balance}
-        resetGameState={resetGameState}
       />
       <GameEnd
         open={gameEndOpen}

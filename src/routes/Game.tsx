@@ -26,7 +26,7 @@ const Game = () => {
             <Button
               variant="contained"
               sx={{ backgroundColor: "#EB9BD5", margin: "10px" }}
-              onClick={() => window.open("https://forms.gle/FeUW8GK667nXqa7e8")}
+              onClick={() => window.open("https://forms.gle/rSnAWb2AxYE4mB6W6")}
             >
               <Typography
                 sx={{

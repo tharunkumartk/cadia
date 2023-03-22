@@ -11,6 +11,9 @@ import MaskedText from "../MaskedText";
 import CardEntity from "../../assets/cards/CardEntity";
 import { GameState } from "../../engine/game";
 import convertCardstoStrings from "../../engine/cardconversion";
+import CashOutDialog from "./CashOutDialog";
+import { pushLeaderboardData } from "../../utils/APIConnection";
+import { UserContext } from "../../config/UserContext";
 
 interface GameEndProps {
   open: boolean;
@@ -25,6 +28,9 @@ interface NextGameButtonProps {
   resetGameState: (arg0: boolean) => void;
   handleClose: () => void;
   gameState: GameState;
+}
+interface CashOutButtonProps {
+  userScore: number;
 }
 
 const NextGameButton = ({ resetGameState, handleClose, gameState }: NextGameButtonProps) => {
@@ -42,41 +48,56 @@ const NextGameButton = ({ resetGameState, handleClose, gameState }: NextGameButt
         backgroundPosition: "center",
         width: "15vw",
         height: "10vh",
+        marginTop: "10px",
+        marginBottom: "10px",
       }}
     >
-      {!forNextTournamentbutnotNextGame && <MaskedText text="Click to Continue" fontSize="1.0rem" />}
+      {!forNextTournamentbutnotNextGame && <MaskedText text="Continue" fontSize="1.25rem" />}
       {forNextTournamentbutnotNextGame && <MaskedText text="Restart" fontSize="1.5rem" />}
     </Button>
   );
 };
 
-const CashOutButton = () => {
+const CashOutButton = ({ userScore }: CashOutButtonProps) => {
   const navigate = useNavigate();
+  const { currentUser } = React.useContext(UserContext);
+
+  const SubmitAndExit = () => {
+    if (!currentUser) return;
+    pushLeaderboardData({
+      // temporary fix by using bracket notation w/ rule disabling to avoid errors because currentUser
+      // is of type "never" due to the deso guy's code
+
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      name: currentUser["ProfileEntryResponse"]["Username"],
+      score: userScore,
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      walletId: currentUser["PublicKeyBase58Check"],
+    });
+    navigate("/home");
+  };
+
   return (
     <Button
-      onClick={() => {
-        navigate("/home");
-      }}
+      onClick={SubmitAndExit}
       sx={{
         backgroundImage: `url(${CashOutBack})`,
         backgroundSize: "contain",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        width: "10vw",
-        marginTop: "3vh",
-        marginBottom: "3vh",
+        width: "15vw",
       }}
     >
       <Typography
         sx={{
           fontFamily: "Joystix",
-          fontSize: "1rem",
+          fontSize: "1.25rem",
           // textShadow: "0px 4px 0px #5D0A9D",
           color: "white",
         }}
       >
         Cash Out
-      </Typography>{" "}
+      </Typography>
     </Button>
   );
 };
@@ -199,33 +220,65 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
             alignItems: "center",
           }}
         >
-          <NextGameButton resetGameState={resetGameState} handleClose={handleClose} gameState={gameState} />
-          <CashOutButton />
-          <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <img src={CoinImg} style={{ width: "5vw", height: "5vh" }} alt="Coin" />
-            <Typography
+          <Grid container>
+            <Grid xs={3.5} />
+            <Grid
+              item
+              xs={5}
+              sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "Joystix",
+                  fontSize: "1.0rem",
+                  textShadow: "0px 4px 0px #5D0A9D",
+                  color: "white",
+                  marginTop: "100px",
+                  marginBottom: "15px",
+                  textAlign: "center",
+                }}
+              >
+                {result}
+              </Typography>
+              <NextGameButton resetGameState={resetGameState} handleClose={handleClose} gameState={gameState} />
+            </Grid>
+            <Grid
+              item
+              xs={3.5}
               sx={{
-                fontFamily: "Joystix",
-                fontSize: "1.0rem",
-                textShadow: "0px 4px 0px #5D0A9D",
-                color: "white",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                paddingLeft: "80px",
               }}
             >
-              Current Balance: {balance}
-            </Typography>
+              <Grid
+                item
+                sx={{
+                  display: "flex",
+                  width: "15vw",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <img src={CoinImg} style={{ width: "5vw", height: "5vh", marginRight: "10px" }} alt="Coin" />
+                <Typography
+                  sx={{
+                    fontFamily: "Joystix",
+                    fontSize: "1.0rem",
+                    textShadow: "0px 4px 0px #5D0A9D",
+                    color: "white",
+                  }}
+                >
+                  Balance {balance}
+                </Typography>
+              </Grid>
+              <CashOutButton userScore={balance} />
+            </Grid>
           </Grid>
-          <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Typography
-              sx={{
-                fontFamily: "Joystix",
-                fontSize: "1.0rem",
-                textShadow: "0px 4px 0px #5D0A9D",
-                color: "white",
-              }}
-            >
-              {result}
-            </Typography>
-          </Grid>
+
           <Grid container className="community-cards" sx={{ height: "20vh" }}>
             <CardEntity card={CommunityCards[0]} />
             <CardEntity card={CommunityCards[1]} />

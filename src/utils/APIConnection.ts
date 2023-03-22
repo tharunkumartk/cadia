@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card } from "../engine/Card";
 
 // confusing, should change later
-const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://cadia-xyz.herokuapp.com/";
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8090" : "https://cadia-xyz.herokuapp.com/";
 
 interface LeaderboardData {
   displayName: string;
