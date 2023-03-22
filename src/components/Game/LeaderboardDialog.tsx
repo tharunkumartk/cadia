@@ -42,6 +42,8 @@ const LeaderboardDialog = ({ open, handleClose }: LeaderboardDialogProps) => {
             backgroundSize: "100% 100%",
             height: "50vh",
             width: "30vw",
+            display: "flex",
+            alignContent: "flex-start",
           }}
         >
           <Grid container sx={{ marginTop: "2vh" }}>
@@ -54,7 +56,10 @@ const LeaderboardDialog = ({ open, handleClose }: LeaderboardDialogProps) => {
               </IconButton>
             </Grid>
           </Grid>
-          <Grid container sx={{ margin: "2vw" }}>
+          <Grid
+            container
+            sx={{ display: "flex", alignContent: "flex-start", justifyContent: "center", margin: "2vh 2vw" }}
+          >
             {leaderboardData?.map((data: LeaderboardData, idx: number) => createLeaderboardRank(idx, data))}
           </Grid>
         </Grid>
