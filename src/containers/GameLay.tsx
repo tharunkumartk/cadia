@@ -651,7 +651,7 @@ const GameLay = () => {
                   sx={{
                     fontFamily: "Joystix",
                     fontSize: "1rem",
-                    textShadow: "0px 4px 0px #5D0A9D",
+                    // textShadow: "0px 4px 0px #5D0A9D",
                     color: "white",
                   }}
                 >
