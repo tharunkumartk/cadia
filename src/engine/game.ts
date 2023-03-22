@@ -54,7 +54,6 @@ export interface GameState{
 /* Starts the round if not started yet */
 export function startRound(gameState: GameState, roundNumber: number, setGameStateHelper: Function):void{
     if (roundNumber < 1 || roundNumber > 4) return;
-    console.log('gameState in StartRound', gameState);
     let newPlayers = gameState.players;
     let newRound = gameState.round;
     for(let i=0;i<gameState.players.length;i++){
@@ -77,7 +76,6 @@ export function startRound(gameState: GameState, roundNumber: number, setGameSta
         setGameStateHelper({deck: deck_copy, table:table_copy});
     }
     setGameStateHelper({players:newPlayers, round:newRound, last_player_raised: -1});
-    console.log("StartRound done, updated the players and round of gamestate")
 }
 /** Conduct the big/small blinds for the game, and blinds rotate to the next player
  * @param index Player index
@@ -176,9 +174,10 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
             if (newRound[id].current_bet > lowestPlayerBet) {
                 newPlayers[id].balance += newRound[id].current_bet - lowestPlayerBet ;
                 newRound[id].current_bet = lowestPlayerBet;
+                total_blinds -= newRound[id].current_bet - lowestPlayerBet;
             }
         }
-        console.log("non All-in players are refunded", newPlayers, newRound)
+        // console.log("non All-in players are refunded", newPlayers, newRound)
     }
     let newPot = gameState.pot + total_blinds;
     setGameStateHelper({players:newPlayers, round:newRound, bigBlind_index: newbigBlindIndex, 
@@ -188,7 +187,7 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
 /** Bet 0 unit of money
  * @param index Player index
  */
-export function check(gameState: GameState, index:number, roundNumber: number, setGameStateHelper: Function):void{
+export function check(gameState: GameState, index:number, setGameStateHelper: Function):void{
     if(!gameState.round.length) throw new Error("Game round not started");
     let max_current_bet = gameState.round.slice(0).sort((a,b)=>b.current_bet-a.current_bet)[0].current_bet;
     if (gameState.round[index].current_bet < max_current_bet) throw new Error("Cannot check with a current bet less than the maximum current bet");
@@ -222,7 +221,6 @@ export function raise(gameState: GameState, index:number,amount_to_raise:number,
     newRound[index].decision="raise";
     newPlayers[index].balance -=amount_to_raise;
     newPot = amount_to_raise + gameState.pot;
-    console.log("line 201 player ", index, " balance: " + newPlayers[index].balance);
     setGameStateHelper({round:newRound, players:newPlayers, pot:newPot, last_player_raised: index});
 }
 /** Call by a player
@@ -249,6 +247,7 @@ export function call(gameState: GameState, index:number, setGameStateHelper: Fun
                 const refund = newRound[i].current_bet - amount_to_call;
                 newRound[i].current_bet -= refund;
                 newPlayers[i].balance += refund;
+                newPot -= refund;
             }
         }
     }
@@ -280,7 +279,7 @@ export function RoundisOver(gameState: GameState):boolean{
         if(last_amount<0)
             last_amount=current_bet;
         else if(current_bet!=last_amount) {
-            console.log("this round continues")
+            // console.log("this round continues")
             return false;
         }
     }
@@ -362,6 +361,14 @@ export function avaliableActions(gameState: GameState, index:number):Array<strin
     /* if you have insufficient balance to call, you cannot raise */
     if (gameState.players[index].balance <= max_current_bet - gameState.round[index].current_bet) {
         actions = actions.filter(f=>f != "raise");
+    }
+    /* if the other player has zero balance, you cannot raise */
+    if (gameState.players.filter(f=>f.balance == 0).length > 0) {
+        actions = actions.filter(f=>f != "raise");
+    }
+    /* you can only call if you have lower current bet than the maximum current bet for this round */
+    if (gameState.round[index].current_bet >= max_current_bet) {
+        actions = actions.filter(f=>f != "call");
     }
     return actions;
 }
