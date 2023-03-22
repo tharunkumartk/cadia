@@ -548,7 +548,7 @@ const GameLay = () => {
           </Grid>
           <Grid item xs={3} sx={{ display: "flex" }}>
             {gameState.bigBlind_index === 0 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "15vw" }} />
+              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
             )}
           </Grid>
           <Grid
@@ -699,7 +699,7 @@ const GameLay = () => {
           <Grid item xs={1} sx={{ display: "flex", alignItems: "center" }} />
           <Grid item xs={3} sx={{ display: "flex" }}>
             {gameState.bigBlind_index === 1 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "15vw" }} />
+              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
             )}
           </Grid>
           <Grid item xs={4} className="gpt-bame">
