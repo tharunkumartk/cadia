@@ -19,7 +19,6 @@ export class Deck{
         return this;
     }
     getCards(count:number=1){
-        console.log("getCards count is ",count);
         return this.cards.splice(0,count);
     }
 }

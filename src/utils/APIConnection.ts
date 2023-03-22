@@ -78,7 +78,7 @@ const getChatGPTPrompt = async (
       chatGPTCurrentBet,
       bigBlindAmount,
     });
-    console.log(`prompt: ${response.data.prompt}`);
+    // console.log(`prompt: ${response.data.prompt}`);
     ret = response.data.prompt;
   } catch (error) {
     console.log("error: ", error);
@@ -98,7 +98,6 @@ const getChatGPTResponse = async (
   bigBlindAmount: number,
 ) => {
   let value = { bet: -1, response: "dummy response" };
-  console.log("calling axios");
   try {
     const response = await axios.post(`${BASE_URL}/chatgpt_response`, {
       money: playerMoney,
@@ -110,12 +109,11 @@ const getChatGPTResponse = async (
       chatGPTCurrentBet,
       bigBlindAmount,
     });
-    console.log("response: ", response);
     value = response.data;
   } catch (error) {
     console.log("error: ", error);
   }
-  console.log("value: ", value);
+  // console.log("value: ", value);
   return value;
 };
 

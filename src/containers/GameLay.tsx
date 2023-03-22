@@ -422,7 +422,7 @@ const GameLay = () => {
     updMessages.push({ message: ChatGPTResp.response, sent: false });
     setMessageData(updMessages);
     // addMessageHelper({ message: ChatGPTResp.response, sent: false })
-    console.log("line 429 ChatGPTAction is", ChatGPTAction);
+    // console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
     if (ChatGPTAction === -1) {
       // console.log("does chatgpt action include fold? ", avaliableActions(gameState, 1).includes("fold"));
