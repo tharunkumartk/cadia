@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Button, Grid, Typography, Modal } from "@mui/material";
+import { Button, Grid, Typography, Modal, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import PokerTableImage from "../../assets/pokertable.svg";
 import GoldPotImg from "../../assets/goldpot.svg";
 import CoinImg from "../../assets/coin.svg";
@@ -14,6 +15,7 @@ import convertCardstoStrings from "../../engine/cardconversion";
 // import CashOutDialog from "./CashOutDialog";
 import { pushLeaderboardData } from "../../utils/APIConnection";
 import { UserContext } from "../../config/UserContext";
+import ChatDialog, { Message } from "./ChatDialog";
 
 interface GameEndProps {
   open: boolean;
@@ -108,187 +110,212 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
   const ChatGPTCards = convertCardstoStrings(gameState.players[1].hand);
   const UserCards = convertCardstoStrings(gameState.players[0].hand);
   const CommunityCards = convertCardstoStrings(gameState.table);
+  const [messageOpen, setMessageOpen] = React.useState<boolean>(false);
+  const [messageData, setMessageData] = React.useState<Message[]>([]);
+
   return (
     <Modal open={open} onClose={handleClose}>
-      <Grid
-        container
-        sx={{ width: "100vw", height: "100vh", justifyContent: "center", alignContent: "center", alignItems: "center" }}
-      >
-        <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "5vh", zIndex: "-1" }}>
-          <img src={PokerTableImage} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-        </Grid>
-
-        <Grid container sx={{ width: "100vw", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-          <Grid
-            item
-            xs={4}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <Typography
-              sx={{
-                fontFamily: "Joystix",
-                fontSize: "2.5rem",
-                textShadow: "0px 4px 0px #5D0A9D",
-                color: "white",
-                height: "10vh",
-              }}
-            >
-              ChatGPT
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <Typography
-              sx={{
-                fontFamily: "Joystix",
-                fontSize: "2.5rem",
-                textShadow: "0px 4px 0px #5D0A9D",
-                color: "white",
-                height: "10vh",
-              }}
-            >
-              You
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container sx={{ width: "100vw", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-          <Grid item xs={1} />
-          <Grid
-            item
-            xs={1.5}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <CardEntity className="endgame-card" card={ChatGPTCards[0]} />
-          </Grid>
-          <Grid
-            item
-            xs={1.5}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <CardEntity className="endgame-card" card={ChatGPTCards[1]} />
-          </Grid>
-          <Grid
-            item
-            xs={1.5}
-            sx={{
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <img src={GoldPotImg} style={{ width: "10vw", height: "10vh" }} alt="Gold Pot" />
-            <Typography
-              sx={{
-                fontFamily: "Joystix",
-                fontSize: "1.5rem",
-                textShadow: "0px 4px 0px #5D0A9D",
-                color: "white",
-              }}
-            >
-              {pot}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={1.5}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <CardEntity className="endgame-card" card={UserCards[0]} />
-          </Grid>
-          <Grid
-            item
-            xs={1.5}
-            sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
-          >
-            <CardEntity className="endgame-card" card={UserCards[1]} />
-          </Grid>
-          <Grid item xs={1} />
-        </Grid>
+      <div>
         <Grid
-          item
+          container
           sx={{
-            margin: "auto",
-            display: "flex",
-            flexDirection: "column",
-            height: "40vh",
-            alignContent: "center",
+            width: "100vw",
+            height: "100vh",
             justifyContent: "center",
+            alignContent: "center",
             alignItems: "center",
           }}
         >
-          <Grid container>
-            <Grid xs={3.5} />
+          <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "5vh", zIndex: "-1" }}>
+            <img src={PokerTableImage} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+          </Grid>
+
+          <Grid
+            container
+            sx={{ width: "100vw", justifyContent: "center", alignContent: "center", alignItems: "center" }}
+          >
             <Grid
               item
-              xs={5}
-              sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+              xs={4}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
             >
               <Typography
                 sx={{
                   fontFamily: "Joystix",
-                  fontSize: "1.0rem",
+                  fontSize: "2.5rem",
                   textShadow: "0px 4px 0px #5D0A9D",
                   color: "white",
-                  marginTop: "100px",
-                  marginBottom: "15px",
-                  textAlign: "center",
+                  height: "10vh",
                 }}
               >
-                {result}
+                ChatGPT
               </Typography>
-              <NextGameButton resetGameState={resetGameState} handleClose={handleClose} gameState={gameState} />
             </Grid>
             <Grid
               item
-              xs={3.5}
+              xs={4}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "Joystix",
+                  fontSize: "2.5rem",
+                  textShadow: "0px 4px 0px #5D0A9D",
+                  color: "white",
+                  height: "10vh",
+                }}
+              >
+                You
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            sx={{ width: "100vw", justifyContent: "center", alignContent: "center", alignItems: "center" }}
+          >
+            <Grid item xs={1} />
+            <Grid
+              item
+              xs={1.5}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
+            >
+              <CardEntity className="endgame-card" card={ChatGPTCards[0]} />
+            </Grid>
+            <Grid
+              item
+              xs={1.5}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
+            >
+              <CardEntity className="endgame-card" card={ChatGPTCards[1]} />
+            </Grid>
+            <Grid
+              item
+              xs={1.5}
               sx={{
                 display: "flex",
+                alignContent: "center",
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                paddingLeft: "80px",
               }}
             >
-              <Grid
-                item
+              <img src={GoldPotImg} style={{ width: "10vw", height: "10vh" }} alt="Gold Pot" />
+              <Typography
                 sx={{
-                  display: "flex",
-                  width: "15vw",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "10px",
+                  fontFamily: "Joystix",
+                  fontSize: "1.5rem",
+                  textShadow: "0px 4px 0px #5D0A9D",
+                  color: "white",
                 }}
               >
-                <img src={CoinImg} style={{ width: "5vw", height: "5vh", marginRight: "10px" }} alt="Coin" />
+                {pot}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={1.5}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
+            >
+              <CardEntity className="endgame-card" card={UserCards[0]} />
+            </Grid>
+            <Grid
+              item
+              xs={1.5}
+              sx={{ display: "flex", alignContent: "center", justifyContent: "center", alignItems: "center" }}
+            >
+              <CardEntity className="endgame-card" card={UserCards[1]} />
+            </Grid>
+            <Grid item xs={1} />
+          </Grid>
+          <Grid
+            item
+            sx={{
+              margin: "auto",
+              display: "flex",
+              flexDirection: "column",
+              height: "40vh",
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Grid container>
+              <Grid xs={3.5}>
+                <Grid item xs={1} sx={{ display: "flex" }}>
+                  <IconButton aria-label="Settings" onClick={() => setMessageOpen(true)}>
+                    {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
+                    <MessageRoundedIcon fontSize="large" sx={{ color: "white" }} />
+                  </IconButton>
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={5}
+                sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+              >
                 <Typography
                   sx={{
                     fontFamily: "Joystix",
                     fontSize: "1.0rem",
                     textShadow: "0px 4px 0px #5D0A9D",
                     color: "white",
+                    marginTop: "100px",
+                    marginBottom: "15px",
+                    textAlign: "center",
                   }}
                 >
-                  Balance {balance}
+                  {result}
                 </Typography>
+                <NextGameButton resetGameState={resetGameState} handleClose={handleClose} gameState={gameState} />
               </Grid>
-              <CashOutButton userScore={balance} />
+              <Grid
+                item
+                xs={3.5}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  paddingLeft: "80px",
+                }}
+              >
+                <Grid
+                  item
+                  sx={{
+                    display: "flex",
+                    width: "15vw",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <img src={CoinImg} style={{ width: "5vw", height: "5vh", marginRight: "10px" }} alt="Coin" />
+                  <Typography
+                    sx={{
+                      fontFamily: "Joystix",
+                      fontSize: "1.0rem",
+                      textShadow: "0px 4px 0px #5D0A9D",
+                      color: "white",
+                    }}
+                  >
+                    Balance {balance}
+                  </Typography>
+                </Grid>
+                <CashOutButton userScore={balance} />
+              </Grid>
+            </Grid>
+
+            <Grid container className="community-cards" sx={{ height: "20vh" }}>
+              <CardEntity card={CommunityCards[0]} />
+              <CardEntity card={CommunityCards[1]} />
+              <CardEntity card={CommunityCards[2]} />
+              <CardEntity card={CommunityCards[3]} />
+              <CardEntity card={CommunityCards[4]} />
             </Grid>
           </Grid>
-
-          <Grid container className="community-cards" sx={{ height: "20vh" }}>
-            <CardEntity card={CommunityCards[0]} />
-            <CardEntity card={CommunityCards[1]} />
-            <CardEntity card={CommunityCards[2]} />
-            <CardEntity card={CommunityCards[3]} />
-            <CardEntity card={CommunityCards[4]} />
-          </Grid>
         </Grid>
-      </Grid>
+        <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
+      </div>
     </Modal>
   );
 };
