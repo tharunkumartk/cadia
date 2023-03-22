@@ -46,9 +46,9 @@ interface PushLeaderboardDataProps {
 const pushLeaderboardData = ({ name, score, walletId }: PushLeaderboardDataProps) => {
   axios
     .post(`${BASE_URL}/leaderboard`, {
-      name: { name },
-      score: { score },
-      walletid: { walletId },
+      name: name,
+      score: score,
+      walletid: walletId,
     })
     .then((res) => {
       return res;

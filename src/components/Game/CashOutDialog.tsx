@@ -11,10 +11,10 @@ interface CashOutDialogProps {
   open: boolean;
   userScore: number;
   handleClose: () => void;
-  resetGameState: (arg0: boolean) => void;
+  // resetGameState: (arg0: boolean) => void;
 }
 
-const CashOutDialog = ({ open, userScore, handleClose, resetGameState }: CashOutDialogProps) => {
+const CashOutDialog = ({ open, userScore, handleClose }: CashOutDialogProps) => {
   const navigate = useNavigate();
   const { currentUser } = React.useContext(UserContext);
 
