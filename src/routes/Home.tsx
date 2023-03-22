@@ -70,10 +70,6 @@ const Home = () => {
             )}
           </Grid>
         </Grid>
-
-        <Grid item xs={12}>
-          <MaskedText text="A virtual arcade" fontSize="2rem" shadow />
-        </Grid>
         <Grid
           item
           xs={12}
@@ -82,8 +78,7 @@ const Home = () => {
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            width: "60vw",
-            height: "50vh",
+            height: "70vh",
             margin: "20px 0 0 0",
           }}
         />
