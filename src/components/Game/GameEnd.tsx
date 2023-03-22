@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button, Grid, Typography, Modal, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PokerTableImage from "../../assets/pokertable.svg";
 import GoldPotImg from "../../assets/goldpot.svg";
 import CoinImg from "../../assets/coin.svg";
@@ -16,6 +17,8 @@ import convertCardstoStrings from "../../engine/cardconversion";
 import { pushLeaderboardData } from "../../utils/APIConnection";
 import { UserContext } from "../../config/UserContext";
 import ChatDialog, { Message } from "./ChatDialog";
+import CashOutDialog from "./CashOutDialog";
+import LeaderboardDialog from "./LeaderboardDialog";
 
 interface GameEndProps {
   open: boolean;
@@ -25,6 +28,7 @@ interface GameEndProps {
   pot: number;
   balance: number;
   result: string;
+  messageData: Message[];
 }
 interface NextGameButtonProps {
   resetGameState: (arg0: boolean) => void;
@@ -104,14 +108,15 @@ const CashOutButton = ({ userScore }: CashOutButtonProps) => {
   );
 };
 
-const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, result }: GameEndProps) => {
+const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, result, messageData }: GameEndProps) => {
   // TODO: should return a screen maybe, not just null
   if (gameState.players.length === 0) return null;
   const ChatGPTCards = convertCardstoStrings(gameState.players[1].hand);
   const UserCards = convertCardstoStrings(gameState.players[0].hand);
   const CommunityCards = convertCardstoStrings(gameState.table);
   const [messageOpen, setMessageOpen] = React.useState<boolean>(false);
-  const [messageData, setMessageData] = React.useState<Message[]>([]);
+  const [cashOutDialogOpen, setCashOutDialogOpen] = React.useState<boolean>(false);
+  const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -240,13 +245,50 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
             }}
           >
             <Grid container>
-              <Grid xs={3.5}>
-                <Grid item xs={1} sx={{ display: "flex" }}>
-                  <IconButton aria-label="Settings" onClick={() => setMessageOpen(true)}>
-                    {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
-                    <MessageRoundedIcon fontSize="large" sx={{ color: "white" }} />
-                  </IconButton>
-                </Grid>
+              <Grid
+                xs={3.5}
+                sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "black", margin: "10px" }}
+                  onClick={() => setMessageOpen(true)}
+                >
+                  <MessageRoundedIcon
+                    fontSize="large"
+                    sx={{ color: "white", margin: "5px 5px 5px 0px", height: "1.5rem" }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "Joystix",
+                      fontSize: "1rem",
+                      color: "white",
+                      // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
+                    }}
+                  >
+                    Messages
+                  </Typography>
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "black", margin: "10px" }}
+                  onClick={() => setLeaderboardOpen(true)}
+                >
+                  <LeaderboardIcon
+                    fontSize="large"
+                    sx={{ color: "white", margin: "5px 5px 5px 0px", height: "1.5rem" }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "Joystix",
+                      fontSize: "1rem",
+                      color: "white",
+                      // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
+                    }}
+                  >
+                    Leaderboard
+                  </Typography>
+                </Button>
               </Grid>
               <Grid
                 item
@@ -276,7 +318,6 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
                   justifyContent: "center",
                   alignItems: "center",
                   flexDirection: "column",
-                  paddingLeft: "80px",
                 }}
               >
                 <Grid
@@ -289,7 +330,7 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
                     marginBottom: "10px",
                   }}
                 >
-                  <img src={CoinImg} style={{ width: "5vw", height: "5vh", marginRight: "10px" }} alt="Coin" />
+                  <img src={CoinImg} style={{ height: "1.5rem", marginRight: "10px" }} alt="Coin" />
                   <Typography
                     sx={{
                       fontFamily: "Joystix",
@@ -301,7 +342,27 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
                     Balance {balance}
                   </Typography>
                 </Grid>
-                <CashOutButton userScore={balance} />
+                <Button
+                  onClick={() => setCashOutDialogOpen(true)}
+                  sx={{
+                    backgroundImage: `url(${CashOutBack})`,
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    width: "10vw",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: "Joystix",
+                      fontSize: "1rem",
+                      // textShadow: "0px 4px 0px #5D0A9D",
+                      color: "white",
+                    }}
+                  >
+                    Cash Out
+                  </Typography>{" "}
+                </Button>
               </Grid>
             </Grid>
 
@@ -315,6 +376,9 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
           </Grid>
         </Grid>
         <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
+        <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
+
+        <CashOutDialog open={cashOutDialogOpen} handleClose={() => setCashOutDialogOpen(false)} userScore={balance} />
       </div>
     </Modal>
   );

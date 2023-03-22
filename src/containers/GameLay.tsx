@@ -385,7 +385,6 @@ const GameLay = () => {
       if (gameState.currentplayer_id === 1) {
         // console.log("line 301 it's AI turn to take actions");
         setGameStateHelper({ ChatGPTTurn: true });
-
       } else {
         // console.log("line 328: set game running to false");
         setGameStateHelper({ PlayerTurn: true }); // allow user to take action
@@ -399,7 +398,7 @@ const GameLay = () => {
   React.useEffect(() => {
     // console.log("line 339 checking gameState", gameState, "player turn is ", gameState.PlayerTurn);
     if (!gameState.PlayerTurn) return;
-    const actions = avaliableActions(gameState, 0); 
+    const actions = avaliableActions(gameState, 0);
     setUserActions(actions);
   }, [gameState.PlayerTurn]);
 
@@ -421,7 +420,7 @@ const GameLay = () => {
     const updMessages = messageData;
     updMessages.push({ message: ChatGPTResp.response, sent: false });
     setMessageData(updMessages);
-    
+
     // addMessageHelper({ message: ChatGPTResp.response, sent: false })
     // console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
@@ -457,7 +456,7 @@ const GameLay = () => {
       ),
       sent: true,
     };
-    // console.log(`prompt${newMessage.message}`); 
+    // console.log(`prompt${newMessage.message}`);
     updMessages.push(newMessage);
     setMessageData(updMessages);
     // addMessageHelper(newMessage);
@@ -488,20 +487,17 @@ const GameLay = () => {
     if (gameState.result.index === 0) {
       if (gameState.result.name === "last standing player") {
         message = `ChatGPT folded. You WON as the ${gameState.result.name}!`;
-      } 
-      else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR") {
         message = `You WON with a ${gameState.result.name}!`;
-      }
-      else {
+      } else {
         message = `You WON with ${gameState.result.name}!`;
       }
     } else if (gameState.result.index === 1) {
       if (gameState.result.name === "last standing player") {
         message = `ChatGPT WON as the ${gameState.result.name}!`;
-      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR") {
         message = `ChatGPT WON with a ${gameState.result.name}!`;
-      }
-      else {
+      } else {
         message = `ChatGPT WON with ${gameState.result.name}!`;
       }
     }
@@ -548,9 +544,7 @@ const GameLay = () => {
             </IconButton>
           </Grid>
           <Grid item xs={3} sx={{ display: "flex" }}>
-            {gameState.bigBlind_index === 0 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
-            )}
+            {gameState.bigBlind_index === 0 && <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />}
           </Grid>
           <Grid
             item
@@ -700,9 +694,7 @@ const GameLay = () => {
         >
           <Grid item xs={1} sx={{ display: "flex", alignItems: "center" }} />
           <Grid item xs={3} sx={{ display: "flex" }}>
-            {gameState.bigBlind_index === 1 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
-            )}
+            {gameState.bigBlind_index === 1 && <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />}
           </Grid>
           <Grid item xs={4} className="gpt-bame">
             <Typography
@@ -738,11 +730,7 @@ const GameLay = () => {
             )}
             {userActions.includes("check") && (
               <Grid item xs={3}>
-                <GameButton
-                  disabled={!gameState.PlayerTurn}
-                  text="check"
-                  onClick={() => handleCheck(0)}
-                />
+                <GameButton disabled={!gameState.PlayerTurn} text="check" onClick={() => handleCheck(0)} />
               </Grid>
             )}
             {userActions.includes("call") && (
@@ -779,6 +767,7 @@ const GameLay = () => {
         pot={checkPot()}
         balance={checkBalance()}
         result={showResult()}
+        messageData={messageData}
       />
       <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
     </Grid>
