@@ -71,18 +71,16 @@ const GameLay = () => {
     },
   });
 
-  // const addMessage = (message: Message) => {
-  //   const messages = messageData;
-  //   messages.push(message);
-  //   setMessageData(messages);
-  // };
-
   const setGameStateHelper = (updatedState: Partial<GameState>) => {
     setGameState((state) => ({ ...state, ...updatedState }));
   };
 
   const addMessageHelper = (message: Message) => {
     setMessageData((state) => ({ ...state, message }));
+  };
+
+  const refreshMessage = () => {
+    setMessageData([]);
   };
 
   const increaseRoundNumber = () => {
@@ -115,7 +113,7 @@ const GameLay = () => {
       (p: { active: any; folded: any }) => p.active === true && p.folded === false,
     );
     if (activePlayers.length === 1) {
-      console.log("line84 singler player left");
+      // console.log("line84 singler player left");
       return true;
     }
     return false;
@@ -152,10 +150,10 @@ const GameLay = () => {
     increasePlayerId();
   };
 
-  const handleCheck = (index: number, roundNumber: number) => {
+  const handleCheck = (index: number) => {
     if (index === 0 && !gameState.PlayerTurn) return;
     if (index === 1 && !gameState.ChatGPTTurn) return;
-    check(gameState, index, roundNumber, setGameStateHelper);
+    check(gameState, index, setGameStateHelper);
     increasePlayerId();
   };
 
@@ -200,6 +198,7 @@ const GameLay = () => {
       smallBlindIndex = 1;
       gameNumber = -1;
     }
+    refreshMessage();
 
     setGameStateHelper({
       pot: 0,
@@ -228,14 +227,12 @@ const GameLay = () => {
 
   /* trigger the first game when user opens the page and trigger later games when this game ends  */
   React.useEffect(() => {
-    console.log("line 164: reset game state");
     resetGameState(false);
   }, []);
 
   /* Initialize the game */
   React.useEffect(() => {
     if (gameState.gameNumber === -1) {
-      console.log("user clicked restart game so we set gamenumber form -1 to 1");
       setGameStateHelper({ gameNumber: 1 });
       return;
     }
@@ -275,7 +272,7 @@ const GameLay = () => {
     }
     if (activePlayers < 2) {
       setGameStateHelper({ players: newPlayers });
-      console.log("line 248: Game is over, user's final score is", newPlayers[0].balance);
+      // console.log("line 248: Game is over, user's final score is", newPlayers[0].balance);
       return;
     }
 
@@ -286,14 +283,13 @@ const GameLay = () => {
     newPlayers[gameState.smallBlind_index].smallBlind = true;
     newPlayers[gameState.smallBlind_index].bigBlind = false;
 
-    console.log("line 260: shuffled the deck");
     setGameStateHelper({ players: newPlayers });
     increaseRoundNumber();
   }, [gameState.gameNumber]);
 
   /* Major Round Loop, going through preflop, flop, turn, and river */
   React.useEffect(() => {
-    console.log("line 267 round number is", gameState.roundNumber);
+    // console.log("line 267 round number is", gameState.roundNumber);
     if (gameState.players.length === 0 || gameState.roundNumber === 0) {
       return;
     }
@@ -301,26 +297,25 @@ const GameLay = () => {
     /* Check if game is over */
     if (singlePlayerLeft()) {
       const result = checkResult(gameState, true, setGameStateHelper);
-      console.log("line 217 players are", gameState.players);
-      console.log("line 218 result is", result);
+      // console.log("line 217 players are", gameState.players);
+      // console.log("line 218 result is", result);
       setGameStateHelper({ result });
       return;
     }
     /* Round Number: 0 (Null), 1 (preflop), 2 (flop), 3 (river), 4 (turn), 5 (exceed max limit, so showdown) */
     if (gameState.roundNumber === 5) {
       const result = checkResult(gameState, false, setGameStateHelper);
-      console.log("line 226 result is", result);
+      // console.log("line 226 result is", result);
       setGameStateHelper({ result });
       return;
     }
 
     /* Start this round */
     startRound(gameState, gameState.roundNumber, setGameStateHelper); // visaulize delt cards
-    console.log("line 235: started the round");
+    // console.log("line 235: started the round");
     /* since the big blind is the last_player_raised for the first round, only set last_player_raised to 0 if it is not the first round */
     if (gameState.roundNumber === 1) {
       dealBlinds(gameState, setGameStateHelper); // dealBlinds initializes the round and last player raised
-      console.log("line 240: dealt blinds");
     } else {
       setGameStateHelper({ last_player_raised: 0 });
       resetRound();
@@ -335,8 +330,8 @@ const GameLay = () => {
       increasePlayerId(); // start the round with player 0
       return;
     }
-    console.log("line 256 current player id is ", gameState.currentplayer_id);
-    console.log("line 257 round number is ", gameState.roundNumber);
+    // console.log("line 256 current player id is ", gameState.currentplayer_id);
+    // console.log("line 257 round number is ", gameState.roundNumber);
     setGameStateHelper({ PlayerTurn: false, ChatGPTTurn: false }); // prevent user from clicking buttons
     /* check if all players have all-ined and everyone's bets are equal */
     if (allPlayersAllIned() && allPlayersBetsEqual()) {
@@ -363,7 +358,6 @@ const GameLay = () => {
       }
     }
     everyoneTakenAction = actions.length === gameState.players.length;
-    console.log("line 347 everyoneTakenAction is ", everyoneTakenAction);
     // if the player is the last player to raise or the player checked or called, check if the round is over
     if (
       (id === gameState.last_player_raised ||
@@ -373,7 +367,7 @@ const GameLay = () => {
     ) {
       if (RoundisOver(gameState)) {
         increaseRoundNumber(); // toggles back to trigger next round
-        console.log("line 282 round is over with roundnumber = ", gameState.roundNumber);
+        // console.log("line 282 round is over with roundnumber = ", gameState.roundNumber);
         return;
       }
     }
@@ -384,42 +378,28 @@ const GameLay = () => {
       gameState.players[id].allIn === true
     ) {
       increasePlayerId(); // loop to trigger next player
-      console.log("line 293 player ", id, " is not active, folded, or all-ined");
       return;
     }
     // if more than one player left, enter the decision stage
     if (!singlePlayerLeft()) {
       if (gameState.currentplayer_id === 1) {
-        console.log("line 301 it's AI turn to take actions");
+        // console.log("line 301 it's AI turn to take actions");
         setGameStateHelper({ ChatGPTTurn: true });
 
-        // const AIavaliableActions = avaliableActions(gameState, 1);
-        // console.log("line 305 AI avaliable actions are", AIavaliableActions)
-        // if (AIavaliableActions.includes("check")) {
-        //   console.log("line 306 AI checked");
-        //   handleCheck(1, gameState.roundNumber);
-        // }
-        // else if (AIavaliableActions.includes("call")) {
-        //   console.log("line 310 AI called");
-        //   handleCall(1);
-        // }
-        // else {
-        //   throw new Error("AI has no avaliable actions");
-        // }
       } else {
-        console.log("line 328: set game running to false");
+        // console.log("line 328: set game running to false");
         setGameStateHelper({ PlayerTurn: true }); // allow user to take action
       }
     } else {
       increaseRoundNumber(); // if one player left, proceed to end the game
-      console.log("line 334: one player left, proceed to end the game");
+      // console.log("line 334: one player left, proceed to end the game");
     }
   }, [gameState.currentplayer_id]);
 
   React.useEffect(() => {
-    console.log("line 339 checking gameState", gameState, "player turn is ", gameState.PlayerTurn);
+    // console.log("line 339 checking gameState", gameState, "player turn is ", gameState.PlayerTurn);
     if (!gameState.PlayerTurn) return;
-    const actions = avaliableActions(gameState, 0); // set to 0 for now
+    const actions = avaliableActions(gameState, 0); 
     setUserActions(actions);
   }, [gameState.PlayerTurn]);
 
@@ -445,16 +425,16 @@ const GameLay = () => {
     console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
     if (ChatGPTAction === -1) {
-      console.log("does chatgpt action include fold? ", avaliableActions(gameState, 1).includes("fold"));
+      // console.log("does chatgpt action include fold? ", avaliableActions(gameState, 1).includes("fold"));
       handleFold(1);
     } else if (ChatGPTAction === 0) {
-      console.log("does chatgpt action include check? ", avaliableActions(gameState, 1).includes("check"));
-      handleCheck(1, gameState.roundNumber);
+      // console.log("does chatgpt action include check? ", avaliableActions(gameState, 1).includes("check"));
+      handleCheck(1);
     } else if (ChatGPTAction === gameState.round[0].current_bet - gameState.round[1].current_bet) {
-      console.log("does chatgpt action include call? ", avaliableActions(gameState, 1).includes("call"));
+      // console.log("does chatgpt action include call? ", avaliableActions(gameState, 1).includes("call"));
       handleCall(1);
     } else {
-      console.log("does chatgpt action include raise? ", avaliableActions(gameState, 1).includes("raise"));
+      // console.log("does chatgpt action include raise? ", avaliableActions(gameState, 1).includes("raise"));
       handleRaise(1, ChatGPTAction);
     }
     setGameStateHelper({ ChatGPTTurn: false });
@@ -476,20 +456,25 @@ const GameLay = () => {
       ),
       sent: true,
     };
-    console.log(`prompt${newMessage.message}`); 
+    // console.log(`prompt${newMessage.message}`); 
     updMessages.push(newMessage);
     setMessageData(updMessages);
     // addMessageHelper(newMessage);
   };
   React.useEffect(() => {
-    console.log("line 431 checking gameState", gameState, "chatgpt turn is ", gameState.ChatGPTTurn);
+    // console.log("line 431 checking gameState", gameState, "chatgpt turn is ", gameState.ChatGPTTurn);
     if (!gameState.ChatGPTTurn) return;
+    /* if player all-ined to match ChatGPT's amount, ChatGPT's only option is to call */
+    if (gameState.players[0].allIn === true && gameState.round[0].current_bet === gameState.round[1].current_bet) {
+      handleCheck(1);
+      return;
+    }
     updateChatGPTPromptMessage();
     fetchChatGPTReponse();
   }, [gameState.ChatGPTTurn]);
 
   const checkBalance = () => {
-    console.log("line 438 checking balance gamestate is", gameState);
+    // console.log("line 438 checking balance gamestate is", gameState);
     if (gameState.players.length !== 0 && gameState.players[0].balance >= 0) {
       return gameState.players[0].balance;
     }
@@ -501,14 +486,21 @@ const GameLay = () => {
     let message = "";
     if (gameState.result.index === 0) {
       if (gameState.result.name === "last standing player") {
-        message = `You WON as the ${gameState.result.name}!`;
-      } else {
+        message = `ChatGPT folded. You WON as the ${gameState.result.name}!`;
+      } 
+      else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+        message = `You WON with a ${gameState.result.name}!`;
+      }
+      else {
         message = `You WON with ${gameState.result.name}!`;
       }
     } else if (gameState.result.index === 1) {
       if (gameState.result.name === "last standing player") {
         message = `ChatGPT WON as the ${gameState.result.name}!`;
-      } else {
+      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+        message = `ChatGPT WON with a ${gameState.result.name}!`;
+      }
+      else {
         message = `ChatGPT WON with ${gameState.result.name}!`;
       }
     }
@@ -747,7 +739,7 @@ const GameLay = () => {
                 <GameButton
                   disabled={!gameState.PlayerTurn}
                   text="check"
-                  onClick={() => handleCheck(0, gameState.roundNumber)}
+                  onClick={() => handleCheck(0)}
                 />
               </Grid>
             )}
