@@ -12,10 +12,18 @@ const Landing = () => {
 
   return (
     <Space>
-      <Grid item xs={12} sx={{ height: "30vh", zIndex: 1 }}>
+      <Grid
+        item
+        xs={12}
+        sx={{ height: "40vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
+      >
         <MaskedText text="Cadia" fontSize="7rem" shadow />
       </Grid>
-      <Grid item xs={12} sx={{ height: "20vh", zIndex: 1 }}>
+      <Grid
+        item
+        xs={12}
+        sx={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
+      >
         <Typography
           sx={{
             fontFamily: "Joystix",
