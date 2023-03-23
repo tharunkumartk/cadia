@@ -373,7 +373,7 @@ export function avaliableActions(gameState: GameState, index:number):Array<strin
     return actions;
 }
 export function computeHand(gameState: GameState, hand:Array<Card>):HandValue{
-    return gameState.__instance.computeHand(hand,hand);
+    return gameState.__instance.computeHand(hand);
 }
 
 
