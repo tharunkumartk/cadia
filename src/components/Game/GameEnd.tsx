@@ -246,6 +246,7 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
           >
             <Grid container>
               <Grid
+                item
                 xs={3.5}
                 sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}
               >

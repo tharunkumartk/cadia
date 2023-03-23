@@ -27,7 +27,7 @@ const getLeaderboardData = (scoreCount: number) => {
       },
     })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       const scores = res.data;
       scores.forEach((score: any) => {
         leaderboardDataReturn.push({displayName: score.name, score: score.score });
