@@ -7,7 +7,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import { getDisplayName } from "../helpers";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
-import MaskedText from "../components/MaskedText";
+// import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
 
@@ -37,22 +37,6 @@ const Home = () => {
                 Our Openfund
               </Typography>
             </Button>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: "#EB9BD5", margin: "10px" }}
-              onClick={() => window.open("https://forms.gle/FeUW8GK667nXqa7e8")}
-            >
-              <Typography
-                sx={{
-                  fontFamily: "Joystix",
-                  fontSize: "1rem",
-                  color: "white",
-                  // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
-                }}
-              >
-                Feedback
-              </Typography>
-            </Button>
           </Grid>
           <Grid item flexGrow={1} />
           <Grid item>
@@ -78,7 +62,7 @@ const Home = () => {
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            height: "70vh",
+            height: "60vh",
             margin: "20px 0 0 0",
           }}
         />
