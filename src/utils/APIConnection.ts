@@ -93,7 +93,7 @@ const getChatGPTPrompt = async (
       past_rounds: pastRounds,
       chatGPTCurrentBet,
       bigBlindAmount,
-    });
+    }, { timeout: 1000 * 15 });
     // console.log(`prompt: ${response.data.prompt}`);
     ret = response.data.prompt;
   } catch (error) {
@@ -124,7 +124,7 @@ const getChatGPTResponse = async (
       past_rounds: pastRounds,
       chatGPTCurrentBet,
       bigBlindAmount,
-    });
+    }, { timeout: 1000 * 15 });
     value = response.data;
   } catch (error) {
     console.log("error: ", error);
