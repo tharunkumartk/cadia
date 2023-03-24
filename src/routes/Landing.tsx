@@ -15,15 +15,11 @@ const Landing = () => {
       <Grid
         item
         xs={12}
-        sx={{ height: "40vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
+        sx={{ height: "40vh", display: "flex", justifyContent: "center", alignItems: "end", zIndex: 2 }}
       >
         <MaskedText text="Cadia" fontSize="7rem" shadow />
       </Grid>
-      <Grid
-        item
-        xs={12}
-        sx={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
-      >
+      <Grid item xs={12} sx={{ height: "10vh", zIndex: 1 }}>
         <Typography
           sx={{
             fontFamily: "Joystix",
@@ -40,7 +36,7 @@ const Landing = () => {
         <Grid item xs={4}>
           <img src={Astronaut} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>
-        <CustomButton text="Coming Soon" disabled onClick={() => {}} />
+        <CustomButton text="Coming Soon" disabled onClick={() => navigate("/home")} />
         <Grid item xs={4}>
           <img src={Scientist} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>

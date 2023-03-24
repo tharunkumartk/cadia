@@ -45,8 +45,6 @@ const Home = () => {
               sx={{
                 backgroundColor: "#861E1E",
                 margin: "10px",
-                display: "flex",
-                flexDirection: "row",
                 "&:hover": {
                   backgroundColor: "#E14F4F",
                 },

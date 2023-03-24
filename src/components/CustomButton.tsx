@@ -17,8 +17,7 @@ const CustomButton = ({ text, onClick, disabled = false }: CustomButtonProps) =>
         onClick={onClick}
         sx={{
           backgroundImage: `url(${BaseButton})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
+          backgroundSize: "100% 100%",
           backgroundPosition: "center",
           width: "15vw",
           height: "20vh",
@@ -28,7 +27,10 @@ const CustomButton = ({ text, onClick, disabled = false }: CustomButtonProps) =>
             : "none",
         }}
       >
-        <MaskedText text={text} fontSize="1.25rem" />
+        {/* this kinda sucks but is temporary fix at least for now */}
+        <Grid item sx={{ padding: "0 2vw" }}>
+          <MaskedText text={text} fontSize="1.25rem" />
+        </Grid>
       </Button>
     </Grid>
   );
