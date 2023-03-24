@@ -36,7 +36,7 @@ const Landing = () => {
         <Grid item xs={4}>
           <img src={Astronaut} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>
-        <CustomButton text="Coming Soon" disabled onClick={() => navigate("/home")} />
+        <CustomButton text="Start" onClick={() => navigate("/home")} />
         <Grid item xs={4}>
           <img src={Scientist} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>
