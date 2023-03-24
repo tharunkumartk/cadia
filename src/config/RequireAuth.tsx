@@ -77,8 +77,10 @@ export default function RequireAuth({ children }: RequireAuthProps) {
       });
       const { data } = res;
       setIsHolding(data.IsHodling);
-      // calculates number of tokens held
-      setTokensHeld(parseInt(data.BalanceEntry.BalanceNanosUint256 ?? 0, 16) / 1e18);
+      let tokens = 0;
+      // calculates number of tokens held if user is a holder
+      if (data.BalanceEntry !== null) tokens = parseInt(data.BalanceEntry.BalanceNanosUint256 ?? 0, 16) / 1e18;
+      setTokensHeld(tokens);
     };
 
     getHoldingInfo();
@@ -88,7 +90,7 @@ export default function RequireAuth({ children }: RequireAuthProps) {
   if (isLoading || isHolding === undefined) return <div>Loading</div>;
 
   if (!currentUser || (currentUser && !isHolder(currentUser))) {
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/home" state={{ from: location }} replace />;
   }
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
