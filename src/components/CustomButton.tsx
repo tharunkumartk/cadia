@@ -27,10 +27,7 @@ const CustomButton = ({ text, onClick, disabled = false }: CustomButtonProps) =>
             : "none",
         }}
       >
-        {/* this kinda sucks but is temporary fix at least for now */}
-        <Grid item sx={{ padding: "0 2vw" }}>
-          <MaskedText text={text} fontSize="1.25rem" />
-        </Grid>
+        <MaskedText text={text} fontSize="1.25rem" />
       </Button>
     </Grid>
   );

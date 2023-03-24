@@ -18,7 +18,7 @@ const MaskedText = ({ text, fontSize, shadow }: MaskedTextProps) => {
           fontFamily: "Joystix",
           fontSize: fontSize ?? "1.75rem",
           position: "absolute",
-          padding: "0 2vw",
+          // padding: "0 2vw",
           color: "white",
           background: "linear-gradient(to top, #EB9BD5, #EB9BD5 50%, white 20%, white 100%);",
           WebkitBackgroundClip: "text",
