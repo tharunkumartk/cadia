@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { identity } from "@deso-core/identity";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import { getDisplayName } from "../helpers";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
@@ -38,9 +39,38 @@ const Home = () => {
               </Typography>
             </Button>
           </Grid>
+          <Grid item sx={{ display: "flex", justifyContent: "start" }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#861E1E",
+                margin: "10px",
+                display: "flex",
+                flexDirection: "row",
+                "&:hover": {
+                  backgroundColor: "#E14F4F",
+                },
+              }}
+              onClick={() => window.open("https://youtu.be/iCJd_KvJAMc")}
+            >
+              <YouTubeIcon sx={{ height: "1.5rem", marginRight: "10px" }} />
+              <Typography
+                sx={{
+                  fontFamily: "Joystix",
+                  fontSize: "1rem",
+                  color: "white",
+                  // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
+                }}
+              >
+                Demo Video
+              </Typography>
+            </Button>
+          </Grid>
           <Grid item flexGrow={1} />
           <Grid item>
-            {currentUser && <Typography sx={{ fontFamily: "Joystix" }}>{getDisplayName(currentUser)}</Typography>}
+            {currentUser && (
+              <Typography sx={{ fontFamily: "Joystix", color: "white" }}>{getDisplayName(currentUser)}</Typography>
+            )}
           </Grid>
           <Grid item sx={{ margin: "0 10px" }}>
             {currentUser ? (

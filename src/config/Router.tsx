@@ -14,8 +14,8 @@ interface RouteSchema {
 
 const routes: RouteSchema[] = [
   { path: "/", component: <Landing /> },
-  { path: "/home", component: <Home /> },
-  { path: "/game", component: <Game />, isAuthRequired: true },
+  // { path: "/home", component: <Home /> },
+  // { path: "/game", component: <Game />, isAuthRequired: true },
 ];
 
 export default function Router() {

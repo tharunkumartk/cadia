@@ -12,10 +12,18 @@ const Landing = () => {
 
   return (
     <Space>
-      <Grid item xs={12} sx={{ height: "30vh", zIndex: 1 }}>
+      <Grid
+        item
+        xs={12}
+        sx={{ height: "40vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
+      >
         <MaskedText text="Cadia" fontSize="7rem" shadow />
       </Grid>
-      <Grid item xs={12} sx={{ height: "20vh", zIndex: 1 }}>
+      <Grid
+        item
+        xs={12}
+        sx={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "end", zIndex: 1 }}
+      >
         <Typography
           sx={{
             fontFamily: "Joystix",
@@ -32,7 +40,7 @@ const Landing = () => {
         <Grid item xs={4}>
           <img src={Astronaut} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>
-        <CustomButton text="START" onClick={() => navigate("/home")} />
+        <CustomButton text="Coming Soon" disabled onClick={() => {}} />
         <Grid item xs={4}>
           <img src={Scientist} style={{ height: "20vh", width: "10vw" }} alt="Astronaut" />
         </Grid>
