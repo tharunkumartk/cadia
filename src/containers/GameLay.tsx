@@ -246,7 +246,7 @@ const GameLay = () => {
     }
 
     setGameStateHelper({ deck: gameState.deck.shuffle() });
-    const playerMoney = [100, 10000]; /* initial player balance */
+    const playerMoney = [100, 100000]; /* initial player balance */
     /* update the playerMoney if the game is not the first game */
     if (gameState.gameNumber > 1) {
       for (let i = 0; i < gameState.players.length; i += 1) {
