@@ -1,0 +1,31 @@
+// import {Holdem} from './holdem';
+// import {Card} from './card';
+
+import assert from "assert";
+
+var {Holdem} = require('./Holdem');
+var {Card} = require('./Card');
+let TexasGame=new Holdem();
+const player0Card1 = new Card("h", 4);
+const player0Card2 = new Card("d", 6);
+const player1Card1 = new Card("c", 7);
+const player1Card2 = new Card("d", 9);
+const communityCard1 = new Card("c", 10);
+const communityCard2 = new Card("s", 5);
+const communityCard3 = new Card("d", 14);
+const communityCard4 = new Card("c", 14);
+const communityCard5 = new Card("h", 14);
+// const player0Card1 = new Card("CLUB", 2);
+// const player0Card2 = new Card("DIAMOND", 5);
+// const player1Card1 = new Card("HEART", 6);
+// const player1Card2 = new Card("CLUB", 12);
+// const communityCard1 = new Card("SPADE", 10);
+// const communityCard2 = new Card("SPADE", 3);
+// const communityCard3 = new Card("SPADE", 13);
+// const communityCard4 = new Card("SPADE", 9);
+// const communityCard5 = new Card("HEART", 3);
+let playerCards=[[player0Card1,player0Card2],[player1Card1,player1Card2]];
+let communityCards=[communityCard1,communityCard2,communityCard3,communityCard4,communityCard5];
+let result=TexasGame.compareHands(playerCards,communityCards);
+// assert(result.type="win" && result.index==1 && result.name=="Pair");
+console.log("result", result);
