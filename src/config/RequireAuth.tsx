@@ -18,7 +18,7 @@ export default function RequireAuth({ children }: RequireAuthProps) {
   // all of a type user which we should code in later, just leaving as any for now
   // https://docs.deso.org/deso-backend/api
   const isHolder = (user: any) => {
-    const allowedUsers = ["bofanj", "tharuntk", "Hackie_Chen", "crowd34"];
+    const allowedUsers = ["bofanj", "tharuntk", "Hackie_Chen", "Crowd34"];
     const MIN_TOKENS_HELD = 10;
     const userDisplayName = getDisplayName(user);
     if (allowedUsers.includes(userDisplayName)) return true;
