@@ -86,6 +86,15 @@ const GameLay = () => {
     setMessageData([]);
   };
 
+  const resetRound = () => {
+    const newRound = gameState.round;
+    for (let i = 0; i < gameState.players.length; i += 1) {
+      newRound[i].current_bet = 0;
+      newRound[i].decision = undefined;
+    }
+    setGameStateHelper({ round: newRound }); 
+  };
+
   const increaseRoundNumber = () => {
     setGameStateHelper({ roundNumber: gameState.roundNumber + 1 });
     if (gameState.round.length > 0) {
@@ -94,21 +103,13 @@ const GameLay = () => {
       setGameStateHelper({ roundStates: newRoundStates });
     }
   };
+
   const increasePlayerId = () => {
     let nextPlayer = gameState.currentplayer_id + 1;
     if (nextPlayer >= gameState.players.length) {
       nextPlayer = 0;
     }
     setGameStateHelper({ currentplayer_id: nextPlayer });
-  };
-
-  const resetRound = () => {
-    const newRound = gameState.round;
-    for (let i = 0; i < gameState.players.length; i += 1) {
-      newRound[i].current_bet = 0;
-      newRound[i].decision = undefined;
-    }
-    setGameStateHelper({ round: newRound }); // reset round
   };
 
   const singlePlayerLeft = () => {
@@ -505,6 +506,9 @@ const GameLay = () => {
       } else {
         message = `ChatGPT WON with ${gameState.result.name}!`;
       }
+    }
+    if (gameState.result.type === "draw") {
+      message = `It's a draw with ${gameState.result.name}!`;
     }
     return message;
   };
