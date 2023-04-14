@@ -11,6 +11,7 @@ import CustomButton from "../components/CustomButton";
 // import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
+import MusicButton from "../components/MusicButton";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -65,6 +66,9 @@ const Home = () => {
             </Button>
           </Grid>
           <Grid item flexGrow={1} />
+          <Grid item xs={1}>
+            <MusicButton />
+          </Grid>
           <Grid item>
             {currentUser && (
               <Typography sx={{ fontFamily: "Joystix", color: "white" }}>{getDisplayName(currentUser)}</Typography>

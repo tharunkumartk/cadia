@@ -1,21 +1,27 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import Astronaut from "../assets/Home/Astronaut.svg";
 import Scientist from "../assets/Home/Scientist.svg";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
 import MaskedText from "../components/MaskedText";
+import MusicButton from "../components/MusicButton";
 
 const Landing = () => {
   const navigate = useNavigate();
 
   return (
     <Space>
+      <Grid container sx={{ alignItems: "center", justifyContent: "right", paddingTop: "10px" }}>
+        <Grid item sx={{ margin: "0 10px", alignItems: "center" }}>
+          <MusicButton />
+        </Grid>
+      </Grid>
       <Grid
         item
         xs={12}
-        sx={{ height: "40vh", display: "flex", justifyContent: "center", alignItems: "end", zIndex: 2 }}
+        sx={{ height: "35vh", display: "flex", justifyContent: "center", alignItems: "end", zIndex: 2 }}
       >
         <MaskedText text="Cadia" fontSize="7rem" shadow />
       </Grid>

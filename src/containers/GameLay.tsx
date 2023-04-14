@@ -92,7 +92,7 @@ const GameLay = () => {
       newRound[i].current_bet = 0;
       newRound[i].decision = undefined;
     }
-    setGameStateHelper({ round: newRound }); 
+    setGameStateHelper({ round: newRound });
   };
 
   const increaseRoundNumber = () => {
@@ -228,7 +228,13 @@ const GameLay = () => {
       },
     });
     // eslint-disable-next-line @typescript-eslint/dot-notation
-    if (currentUser) pushGameStartData({ name: currentUser["ProfileEntryResponse"]["Username"], walletId: currentUser["PublicKeyBase58Check"] });
+    if (currentUser)
+      pushGameStartData({
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        name: currentUser["ProfileEntryResponse"]["Username"],
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        walletId: currentUser["PublicKeyBase58Check"],
+      });
   };
 
   /* trigger the first game when user opens the page and trigger later games when this game ends  */
@@ -541,7 +547,7 @@ const GameLay = () => {
 
   return (
     <Grid container>
-      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "5vh" }}>
+      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "8vh" }}>
         <img src={PokerTableImage} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       </Grid>
       <Grid container className="actual-table" sx={{ marginTop: "3vh" }}>
