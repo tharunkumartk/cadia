@@ -1,26 +1,24 @@
 import React from "react";
-import { Button, Grid, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import ReactAudioPlayer from "react-audio-player";
-import BaseButton from "../assets/BaseButton.svg";
-// import BGMusic from "../assets/BGMusic.mp3";
 
-const MusicButton = () => {
-  const songURL = process.env.REACT_APP_IS_DEV
-    ? "https://thecadia.xyz/BGMusic.mp3"
-    : "http://localhost:3000/BGMusic.mp3";
-  const [Sound] = React.useState(new Audio(songURL));
-  const [musicPlaying, setMusicPlaying] = React.useState(false);
-  Sound.loop = true;
+export interface MusicButtonProps {
+  sound: HTMLAudioElement;
+  musicPlaying: boolean;
+  setMusicPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const MusicButton = (props: MusicButtonProps) => {
+  const { sound, musicPlaying, setMusicPlaying } = props;
+  sound.loop = true;
   return (
     <Button
       onClick={() => {
         if (musicPlaying === false) {
-          Sound.play();
+          sound.play();
         } else if (musicPlaying === true) {
-          Sound.pause();
+          sound.pause();
         }
         setMusicPlaying(!musicPlaying);
       }}
@@ -38,5 +36,3 @@ const MusicButton = () => {
     </Button>
   );
 };
-
-export default MusicButton;

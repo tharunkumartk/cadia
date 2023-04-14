@@ -6,16 +6,17 @@ import Scientist from "../assets/Home/Scientist.svg";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
 import MaskedText from "../components/MaskedText";
-import MusicButton from "../components/MusicButton";
+import { MusicButton, MusicButtonProps } from "../components/MusicButton";
 
-const Landing = () => {
+const Landing = (props: MusicButtonProps) => {
+  const { sound, musicPlaying, setMusicPlaying } = props;
   const navigate = useNavigate();
 
   return (
     <Space>
       <Grid container sx={{ alignItems: "center", justifyContent: "right", paddingTop: "10px" }}>
         <Grid item sx={{ margin: "0 10px", alignItems: "center" }}>
-          <MusicButton />
+          <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
         </Grid>
       </Grid>
       <Grid

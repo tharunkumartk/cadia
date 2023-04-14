@@ -12,13 +12,22 @@ interface RouteSchema {
   isAuthRequired?: boolean;
 }
 
-const routes: RouteSchema[] = [
-  { path: "/", component: <Landing /> },
-  { path: "/home", component: <Home /> },
-  { path: "/game", component: <Game />, isAuthRequired: true },
-];
-
 export default function Router() {
+  const songURL = process.env.REACT_APP_IS_DEV
+    ? "https://thecadia.xyz/BGMusic.mp3"
+    : "http://localhost:3000/BGMusic.mp3";
+  const [Sound] = React.useState(new Audio(songURL));
+  const [musicPlaying, setMusicPlaying] = React.useState(false);
+  const routes: RouteSchema[] = [
+    { path: "/", component: <Landing sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} /> },
+    { path: "/home", component: <Home sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} /> },
+    {
+      path: "/game",
+      component: <Game sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />,
+      isAuthRequired: true,
+    },
+  ];
+
   return (
     <Routes>
       {routes.map((route: RouteSchema) => (

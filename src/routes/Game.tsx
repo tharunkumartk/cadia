@@ -7,9 +7,10 @@ import GameLay from "../containers/GameLay";
 import Space from "../assets/Space/Space.svg";
 import MaskedText from "../components/MaskedText";
 import LeaderboardDialog from "../components/Game/LeaderboardDialog";
-import MusicButton from "../components/MusicButton";
+import { MusicButton, MusicButtonProps } from "../components/MusicButton";
 
-const Game = () => {
+const Game = (props: MusicButtonProps) => {
+  const { sound, musicPlaying, setMusicPlaying } = props;
   const navigate = useNavigate();
   const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
 
@@ -42,7 +43,7 @@ const Game = () => {
             </Button>
           </Grid>
           <Grid item xs={1}>
-            <MusicButton />
+            <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
           </Grid>
           <Grid item xs={0.5} sx={{ display: "flex", justifyContent: "end" }}>
             <IconButton aria-label="Settings" onClick={() => setLeaderboardOpen(true)}>

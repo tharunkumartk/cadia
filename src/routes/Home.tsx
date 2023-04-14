@@ -11,9 +11,10 @@ import CustomButton from "../components/CustomButton";
 // import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
-import MusicButton from "../components/MusicButton";
+import { MusicButton, MusicButtonProps } from "../components/MusicButton";
 
-const Home = () => {
+const Home = (props: MusicButtonProps) => {
+  const { sound, musicPlaying, setMusicPlaying } = props;
   const navigate = useNavigate();
   // add isLoading later
   const { currentUser } = React.useContext(UserContext);
@@ -67,7 +68,7 @@ const Home = () => {
           </Grid>
           <Grid item flexGrow={1} />
           <Grid item xs={1}>
-            <MusicButton />
+            <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
           </Grid>
           <Grid item>
             {currentUser && (
