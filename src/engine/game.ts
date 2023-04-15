@@ -104,9 +104,9 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
             }
             else {
                 total_blinds += newPlayers[id].balance;
-                newPlayers[id].balance = 0;
-                newPlayers[id].allIn = true;
                 newRound[id].current_bet += newPlayers[id].balance;
+                newPlayers[id].allIn = true;
+                newPlayers[id].balance = 0;
                 if (newRound[id].current_bet > gameState.bigBlindAmount/2) {
                     newRound[id].decision = "raise";
                     newLastPlayerRaised = id;
@@ -143,9 +143,9 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
             }
             else {
                 total_blinds += newPlayers[id].balance;
+                newRound[id].current_bet += newPlayers[id].balance;
                 newPlayers[id].balance = 0;
                 newPlayers[id].allIn = true;
-                newRound[id].current_bet += newPlayers[id].balance;
                 newRound[id].decision = "call";
                 someoneAllINneedReFund = true;
             }
@@ -173,8 +173,8 @@ export function dealBlinds(gameState: GameState, setGameStateHelper: Function):v
             }
             if (newRound[id].current_bet > lowestPlayerBet) {
                 newPlayers[id].balance += newRound[id].current_bet - lowestPlayerBet ;
-                newRound[id].current_bet = lowestPlayerBet;
                 total_blinds -= newRound[id].current_bet - lowestPlayerBet;
+                newRound[id].current_bet = lowestPlayerBet;
             }
         }
         // console.log("non All-in players are refunded", newPlayers, newRound)
@@ -373,7 +373,7 @@ export function avaliableActions(gameState: GameState, index:number):Array<strin
     return actions;
 }
 export function computeHand(gameState: GameState, hand:Array<Card>):HandValue{
-    return gameState.__instance.computeHand(hand,hand);
+    return gameState.__instance.computeHand(hand);
 }
 
 

@@ -8,7 +8,7 @@ function Card(props) {
 
   if (back) {
     return (
-      <div class={className}>
+      <div className={className}>
         <img src={b} className={className} alt={card} style={style} />
       </div>
     )
@@ -16,7 +16,7 @@ function Card(props) {
 
   if (front) {
     return (
-      <div class={className}>
+      <div className={className}>
         <img src={card} className={className} alt={card} style={style} />
       </div>
     )

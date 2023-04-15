@@ -41,12 +41,10 @@ const Space = ({ children }: SpaceProps) => {
         xs={12}
         style={{
           backgroundImage: `url(${Clouds})`,
-          backgroundSize: "cover",
-          top: "5vh",
-          height: "30vh",
+          backgroundSize: "100% 100%",
+          top: "3vh",
+          height: "40vh",
           width: "100vw",
-          // bottom: "10vh",
-          // left: 0,
           position: "fixed",
           zIndex: -1,
         }}
@@ -56,11 +54,11 @@ const Space = ({ children }: SpaceProps) => {
         xs={10}
         style={{
           backgroundImage: `url(${City})`,
-          backgroundSize: "contain",
-          height: "60vh",
+          backgroundSize: "100% 100%",
+          height: "65vh",
           width: "100vw",
-          bottom: "10vh",
-          left: "7vw",
+          bottom: "5vh",
+          left: "3vw",
           position: "fixed",
           zIndex: -1,
         }}

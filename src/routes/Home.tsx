@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { identity } from "@deso-core/identity";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import { getDisplayName } from "../helpers";
 import Space from "../containers/Space";
 import CustomButton from "../components/CustomButton";
-import MaskedText from "../components/MaskedText";
+// import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
+import { MusicButton, MusicButtonProps } from "../components/MusicButton";
 
-const Home = () => {
+const Home = (props: MusicButtonProps) => {
+  const { sound, musicPlaying, setMusicPlaying } = props;
   const navigate = useNavigate();
   // add isLoading later
   const { currentUser } = React.useContext(UserContext);
@@ -37,11 +40,20 @@ const Home = () => {
                 Our Openfund
               </Typography>
             </Button>
+          </Grid>
+          <Grid item sx={{ display: "flex", justifyContent: "start" }}>
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#EB9BD5", margin: "10px" }}
-              onClick={() => window.open("https://forms.gle/FeUW8GK667nXqa7e8")}
+              sx={{
+                backgroundColor: "#861E1E",
+                margin: "10px",
+                "&:hover": {
+                  backgroundColor: "#E14F4F",
+                },
+              }}
+              onClick={() => window.open("https://youtu.be/iCJd_KvJAMc")}
             >
+              <YouTubeIcon sx={{ height: "1.5rem", marginRight: "10px" }} />
               <Typography
                 sx={{
                   fontFamily: "Joystix",
@@ -50,13 +62,18 @@ const Home = () => {
                   // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
                 }}
               >
-                Feedback
+                Demo Video
               </Typography>
             </Button>
           </Grid>
           <Grid item flexGrow={1} />
+          <Grid item xs={1}>
+            <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
+          </Grid>
           <Grid item>
-            {currentUser && <Typography sx={{ fontFamily: "Joystix" }}>{getDisplayName(currentUser)}</Typography>}
+            {currentUser && (
+              <Typography sx={{ fontFamily: "Joystix", color: "white" }}>{getDisplayName(currentUser)}</Typography>
+            )}
           </Grid>
           <Grid item sx={{ margin: "0 10px" }}>
             {currentUser ? (
@@ -70,10 +87,6 @@ const Home = () => {
             )}
           </Grid>
         </Grid>
-
-        <Grid item xs={12}>
-          <MaskedText text="A virtual arcade" fontSize="2rem" shadow />
-        </Grid>
         <Grid
           item
           xs={12}
@@ -82,8 +95,7 @@ const Home = () => {
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            width: "60vw",
-            height: "50vh",
+            height: "60vh",
             margin: "20px 0 0 0",
           }}
         />

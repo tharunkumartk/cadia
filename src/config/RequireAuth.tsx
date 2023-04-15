@@ -13,12 +13,16 @@ export default function RequireAuth({ children }: RequireAuthProps) {
   const location = useLocation();
   const { currentUser, isLoading } = React.useContext(UserContext);
   const [isHolding, setIsHolding] = React.useState<boolean | undefined>(undefined);
+  const [tokensHeld, setTokensHeld] = React.useState<number>(0);
 
   // all of a type user which we should code in later, just leaving as any for now
   // https://docs.deso.org/deso-backend/api
   const isHolder = (user: any) => {
-    if (isHolding) return true;
-    const allowedUsers = ["bofanj", "tharuntk", "Hackie_Chen"];
+    const allowedUsers = ["bofanj", "tharuntk", "Hackie_Chen", "Crowd34"];
+    const MIN_TOKENS_HELD = 10;
+    const userDisplayName = getDisplayName(user);
+    if (allowedUsers.includes(userDisplayName)) return true;
+    return isHolding && tokensHeld >= MIN_TOKENS_HELD;
     // const allowedUsers = [
     //   "Cadia",
     //   "whoami",
@@ -60,21 +64,10 @@ export default function RequireAuth({ children }: RequireAuthProps) {
     //   "tharuntk",
     //   "Hackie_Chen",
     // ];
-    const userDisplayName = getDisplayName(user);
-    return allowedUsers.includes(userDisplayName);
   };
 
-  // const convertNanoToCoin = (nano: number) => {
-  //   const DESO_PRICE = 10;
-  //   const CADIA_PRICE = 1.94;
-  //   const desoAmount = nano / 1e10;
-  //   const investedMoney = desoAmount * DESO_PRICE;
-  //   const tokensOwned = investedMoney / CADIA_PRICE;
-  //   return tokensOwned;
-  // };
-
   React.useEffect(() => {
-    const getIsHolding = async () => {
+    const getHoldingInfo = async () => {
       if (!currentUser) return;
       const res = await axios.post<any>("https://blockproducer.deso.org/api/v0/is-hodling-public-key", {
         // eslint-disable-next-line @typescript-eslint/dot-notation
@@ -84,16 +77,20 @@ export default function RequireAuth({ children }: RequireAuthProps) {
       });
       const { data } = res;
       setIsHolding(data.IsHodling);
+      let tokens = 0;
+      // calculates number of tokens held if user is a holder
+      if (data.BalanceEntry !== null) tokens = parseInt(data.BalanceEntry.BalanceNanosUint256 ?? 0, 16) / 1e18;
+      setTokensHeld(tokens);
     };
 
-    getIsHolding();
+    getHoldingInfo();
   }, [currentUser]);
 
   // if (isLoading || !holders) return <div>Loading</div>;
   if (isLoading || isHolding === undefined) return <div>Loading</div>;
 
   if (!currentUser || (currentUser && !isHolder(currentUser))) {
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/home" state={{ from: location }} replace />;
   }
 
   // eslint-disable-next-line react/jsx-no-useless-fragment

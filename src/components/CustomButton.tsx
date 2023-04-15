@@ -17,8 +17,7 @@ const CustomButton = ({ text, onClick, disabled = false }: CustomButtonProps) =>
         onClick={onClick}
         sx={{
           backgroundImage: `url(${BaseButton})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
+          backgroundSize: "100% 100%",
           backgroundPosition: "center",
           width: "15vw",
           height: "20vh",

@@ -9,7 +9,7 @@ import CommunityCards from "../components/Game/CommunityCards";
 import UserCards from "../components/Game/UserCards";
 import GameButton from "../components/Game/GameButton";
 import CashOutBack from "../assets/cashoutback.svg";
-import { getChatGPTPrompt, getChatGPTResponse } from "../utils/APIConnection";
+import { getChatGPTPrompt, getChatGPTResponse, pushGameStartData } from "../utils/APIConnection";
 import ChatDialog, { Message } from "../components/Game/ChatDialog";
 
 import {
@@ -33,12 +33,15 @@ import ChatGPTUpdate from "../components/Game/ChatGPTUpdate";
 import convertCardstoStrings from "../engine/cardconversion";
 import GameEnd from "../components/Game/GameEnd";
 import BigBlindIndicator from "../assets/BigBlindIndicator.svg";
+import { UserContext } from "../config/UserContext";
 // import MaskedText from "../components/MaskedText";
 
 // implement
 const GameLay = () => {
   const bigBlindAmount = 10;
   const userIndex = 1;
+
+  const { currentUser } = React.useContext(UserContext);
 
   const [raiseOverlayOpen, setRaiseOverlayOpen] = React.useState<boolean>(false);
   const [cashOutDialogOpen, setCashOutDialogOpen] = React.useState<boolean>(false);
@@ -83,6 +86,15 @@ const GameLay = () => {
     setMessageData([]);
   };
 
+  const resetRound = () => {
+    const newRound = gameState.round;
+    for (let i = 0; i < gameState.players.length; i += 1) {
+      newRound[i].current_bet = 0;
+      newRound[i].decision = undefined;
+    }
+    setGameStateHelper({ round: newRound });
+  };
+
   const increaseRoundNumber = () => {
     setGameStateHelper({ roundNumber: gameState.roundNumber + 1 });
     if (gameState.round.length > 0) {
@@ -91,21 +103,13 @@ const GameLay = () => {
       setGameStateHelper({ roundStates: newRoundStates });
     }
   };
+
   const increasePlayerId = () => {
     let nextPlayer = gameState.currentplayer_id + 1;
     if (nextPlayer >= gameState.players.length) {
       nextPlayer = 0;
     }
     setGameStateHelper({ currentplayer_id: nextPlayer });
-  };
-
-  const resetRound = () => {
-    const newRound = gameState.round;
-    for (let i = 0; i < gameState.players.length; i += 1) {
-      newRound[i].current_bet = 0;
-      newRound[i].decision = undefined;
-    }
-    setGameStateHelper({ round: newRound }); // reset round
   };
 
   const singlePlayerLeft = () => {
@@ -223,6 +227,14 @@ const GameLay = () => {
         index: -1,
       },
     });
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    if (currentUser)
+      pushGameStartData({
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        name: currentUser["ProfileEntryResponse"]["Username"],
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        walletId: currentUser["PublicKeyBase58Check"],
+      });
   };
 
   /* trigger the first game when user opens the page and trigger later games when this game ends  */
@@ -241,7 +253,7 @@ const GameLay = () => {
     }
 
     setGameStateHelper({ deck: gameState.deck.shuffle() });
-    const playerMoney = [100, 10000]; /* initial player balance */
+    const playerMoney = [100, 1000000]; /* initial player balance */
     /* update the playerMoney if the game is not the first game */
     if (gameState.gameNumber > 1) {
       for (let i = 0; i < gameState.players.length; i += 1) {
@@ -385,7 +397,6 @@ const GameLay = () => {
       if (gameState.currentplayer_id === 1) {
         // console.log("line 301 it's AI turn to take actions");
         setGameStateHelper({ ChatGPTTurn: true });
-
       } else {
         // console.log("line 328: set game running to false");
         setGameStateHelper({ PlayerTurn: true }); // allow user to take action
@@ -399,7 +410,7 @@ const GameLay = () => {
   React.useEffect(() => {
     // console.log("line 339 checking gameState", gameState, "player turn is ", gameState.PlayerTurn);
     if (!gameState.PlayerTurn) return;
-    const actions = avaliableActions(gameState, 0); 
+    const actions = avaliableActions(gameState, 0);
     setUserActions(actions);
   }, [gameState.PlayerTurn]);
 
@@ -421,7 +432,7 @@ const GameLay = () => {
     const updMessages = messageData;
     updMessages.push({ message: ChatGPTResp.response, sent: false });
     setMessageData(updMessages);
-    
+
     // addMessageHelper({ message: ChatGPTResp.response, sent: false })
     // console.log("line 429 ChatGPTAction is", ChatGPTAction);
     // chatgptaction should return amount_to_raise
@@ -457,7 +468,7 @@ const GameLay = () => {
       ),
       sent: true,
     };
-    // console.log(`prompt${newMessage.message}`); 
+    // console.log(`prompt${newMessage.message}`);
     updMessages.push(newMessage);
     setMessageData(updMessages);
     // addMessageHelper(newMessage);
@@ -488,22 +499,22 @@ const GameLay = () => {
     if (gameState.result.index === 0) {
       if (gameState.result.name === "last standing player") {
         message = `ChatGPT folded. You WON as the ${gameState.result.name}!`;
-      } 
-      else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR") {
         message = `You WON with a ${gameState.result.name}!`;
-      }
-      else {
+      } else {
         message = `You WON with ${gameState.result.name}!`;
       }
     } else if (gameState.result.index === 1) {
       if (gameState.result.name === "last standing player") {
         message = `ChatGPT WON as the ${gameState.result.name}!`;
-      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR" ) {
+      } else if (gameState.result.name === "STRAIGHT" || gameState.result.name === "PAIR") {
         message = `ChatGPT WON with a ${gameState.result.name}!`;
-      }
-      else {
+      } else {
         message = `ChatGPT WON with ${gameState.result.name}!`;
       }
+    }
+    if (gameState.result.type === "draw") {
+      message = `It's a draw with ${gameState.result.name}!`;
     }
     return message;
   };
@@ -536,7 +547,7 @@ const GameLay = () => {
 
   return (
     <Grid container>
-      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "5vh" }}>
+      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "8vh" }}>
         <img src={PokerTableImage} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       </Grid>
       <Grid container className="actual-table" sx={{ marginTop: "3vh" }}>
@@ -548,9 +559,7 @@ const GameLay = () => {
             </IconButton>
           </Grid>
           <Grid item xs={3} sx={{ display: "flex" }}>
-            {gameState.bigBlind_index === 0 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
-            )}
+            {gameState.bigBlind_index === 0 && <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />}
           </Grid>
           <Grid
             item
@@ -600,6 +609,7 @@ const GameLay = () => {
                     marginTop: "0.1rem",
                   }}
                 >
+                  {/* TODO: make this a function and call it within the return */}
                   {(() => {
                     switch (gameState.round[1].decision) {
                       case "raise":
@@ -700,9 +710,7 @@ const GameLay = () => {
         >
           <Grid item xs={1} sx={{ display: "flex", alignItems: "center" }} />
           <Grid item xs={3} sx={{ display: "flex" }}>
-            {gameState.bigBlind_index === 1 && (
-              <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />
-            )}
+            {gameState.bigBlind_index === 1 && <img src={BigBlindIndicator} alt="big blind" style={{ width: "5vw" }} />}
           </Grid>
           <Grid item xs={4} className="gpt-bame">
             <Typography
@@ -738,11 +746,7 @@ const GameLay = () => {
             )}
             {userActions.includes("check") && (
               <Grid item xs={3}>
-                <GameButton
-                  disabled={!gameState.PlayerTurn}
-                  text="check"
-                  onClick={() => handleCheck(0)}
-                />
+                <GameButton disabled={!gameState.PlayerTurn} text="check" onClick={() => handleCheck(0)} />
               </Grid>
             )}
             {userActions.includes("call") && (
@@ -779,6 +783,7 @@ const GameLay = () => {
         pot={checkPot()}
         balance={checkBalance()}
         result={showResult()}
+        messageData={messageData}
       />
       <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
     </Grid>
