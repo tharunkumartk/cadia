@@ -6,9 +6,9 @@ import { UserProvider } from "./config/UserContext";
 export default function App() {
   return (
     <BrowserRouter>
-      <UserProvider>
-        <Router />
-      </UserProvider>
+      {/* <UserProvider> */}
+      <Router />
+      {/* </UserProvider> */}
     </BrowserRouter>
   );
 }

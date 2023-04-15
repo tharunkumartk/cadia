@@ -33,15 +33,19 @@ import ChatGPTUpdate from "../components/Game/ChatGPTUpdate";
 import convertCardstoStrings from "../engine/cardconversion";
 import GameEnd from "../components/Game/GameEnd";
 import BigBlindIndicator from "../assets/BigBlindIndicator.svg";
-import { UserContext } from "../config/UserContext";
+// import { UserContext } from "../config/UserContext";
 // import MaskedText from "../components/MaskedText";
 
+interface GameLayProps {
+  account: string;
+}
 // implement
-const GameLay = () => {
+const GameLay = (props: GameLayProps) => {
   const bigBlindAmount = 10;
   const userIndex = 1;
 
-  const { currentUser } = React.useContext(UserContext);
+  // const { currentUser } = React.useContext(UserContext);
+  const { account } = props;
 
   const [raiseOverlayOpen, setRaiseOverlayOpen] = React.useState<boolean>(false);
   const [cashOutDialogOpen, setCashOutDialogOpen] = React.useState<boolean>(false);
@@ -92,7 +96,7 @@ const GameLay = () => {
       newRound[i].current_bet = 0;
       newRound[i].decision = undefined;
     }
-    setGameStateHelper({ round: newRound }); 
+    setGameStateHelper({ round: newRound });
   };
 
   const increaseRoundNumber = () => {
@@ -228,7 +232,15 @@ const GameLay = () => {
       },
     });
     // eslint-disable-next-line @typescript-eslint/dot-notation
-    if (currentUser) pushGameStartData({ name: currentUser["ProfileEntryResponse"]["Username"], walletId: currentUser["PublicKeyBase58Check"] });
+    // if (account !== "")
+    //   pushGameStartData({
+    //     name: account,
+    //     walletId: account,
+    //   });
+    pushGameStartData({
+      name: account,
+      walletId: account,
+    });
   };
 
   /* trigger the first game when user opens the page and trigger later games when this game ends  */
@@ -541,7 +553,7 @@ const GameLay = () => {
 
   return (
     <Grid container>
-      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "5vh" }}>
+      <Grid item sx={{ width: "80vw", height: "90vh", position: "fixed", left: "10vw", top: "8vh" }}>
         <img src={PokerTableImage} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       </Grid>
       <Grid container className="actual-table" sx={{ marginTop: "3vh" }}>
@@ -768,6 +780,7 @@ const GameLay = () => {
         open={cashOutDialogOpen}
         handleClose={() => setCashOutDialogOpen(false)}
         userScore={gameState.players?.[0]?.balance}
+        account={account}
       />
       <GameEnd
         open={gameEndOpen}
@@ -778,6 +791,7 @@ const GameLay = () => {
         balance={checkBalance()}
         result={showResult()}
         messageData={messageData}
+        account={account}
       />
       <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
     </Grid>
