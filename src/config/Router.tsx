@@ -5,11 +5,20 @@ import RequireAuth from "./RequireAuth";
 import Landing from "../routes/Landing";
 import Home from "../routes/Home";
 import Game from "../routes/Game";
+import Wager from "../routes/Wager";
 
 interface RouteSchema {
   path: string;
   component: JSX.Element;
   isAuthRequired?: boolean;
+}
+
+export interface PageProps {
+  sound: HTMLAudioElement;
+  musicPlaying: boolean;
+  setMusicPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  account: string;
+  setAccount: (account: string) => void;
 }
 
 export default function Router() {
@@ -18,13 +27,49 @@ export default function Router() {
     : "http://localhost:3000/BGMusic.mp3";
   const [Sound] = React.useState(new Audio(songURL));
   const [musicPlaying, setMusicPlaying] = React.useState(false);
+  const [account, setAccount] = React.useState("");
   const routes: RouteSchema[] = [
-    { path: "/", component: <Landing sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} /> },
-    { path: "/home", component: <Home sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} /> },
+    {
+      path: "/",
+      component: <Landing sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />,
+    },
+    {
+      path: "/home",
+      component: (
+        <Home
+          sound={Sound}
+          musicPlaying={musicPlaying}
+          setMusicPlaying={setMusicPlaying}
+          account={account}
+          setAccount={setAccount}
+        />
+      ),
+    },
     {
       path: "/game",
-      component: <Game sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />,
-      isAuthRequired: true,
+      component: (
+        <Game
+          sound={Sound}
+          musicPlaying={musicPlaying}
+          setMusicPlaying={setMusicPlaying}
+          account={account}
+          setAccount={setAccount}
+        />
+      ),
+      isAuthRequired: false,
+    },
+    {
+      path: "/wager",
+      component: (
+        <Wager
+          sound={Sound}
+          musicPlaying={musicPlaying}
+          setMusicPlaying={setMusicPlaying}
+          account={account}
+          setAccount={setAccount}
+        />
+      ),
+      isAuthRequired: false,
     },
   ];
 

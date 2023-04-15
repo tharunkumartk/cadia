@@ -7,10 +7,11 @@ import GameLay from "../containers/GameLay";
 import Space from "../assets/Space/Space.svg";
 import MaskedText from "../components/MaskedText";
 import LeaderboardDialog from "../components/Game/LeaderboardDialog";
-import { MusicButton, MusicButtonProps } from "../components/MusicButton";
+import { MusicButton } from "../components/MusicButton";
+import { PageProps } from "../config/Router";
 
-const Game = (props: MusicButtonProps) => {
-  const { sound, musicPlaying, setMusicPlaying } = props;
+const Game = (props: PageProps) => {
+  const { sound, musicPlaying, setMusicPlaying, account } = props;
   const navigate = useNavigate();
   const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
 
@@ -54,7 +55,7 @@ const Game = (props: MusicButtonProps) => {
         </Grid>
         <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
       </Grid>
-      <GameLay />
+      <GameLay account={account} />
     </div>
   );
 };
