@@ -11,24 +11,24 @@ interface CashOutDialogProps {
   open: boolean;
   userScore: number;
   handleClose: () => void;
+  account: string;
   // resetGameState: (arg0: boolean) => void;
 }
 
-const CashOutDialog = ({ open, userScore, handleClose }: CashOutDialogProps) => {
+const CashOutDialog = ({ open, userScore, handleClose, account }: CashOutDialogProps) => {
   const navigate = useNavigate();
-  const { currentUser } = React.useContext(UserContext);
 
   const SubmitAndExit = () => {
-    if (!currentUser) return;
+    if (account === "") return;
     pushLeaderboardData({
       // temporary fix by using bracket notation w/ rule disabling to avoid errors because currentUser
       // is of type "never" due to the deso guy's code
 
       // eslint-disable-next-line @typescript-eslint/dot-notation
-      name: currentUser["ProfileEntryResponse"]["Username"],
+      name: account,
       score: userScore,
       // eslint-disable-next-line @typescript-eslint/dot-notation
-      walletId: currentUser["PublicKeyBase58Check"],
+      walletId: account,
     });
     navigate("/home");
   };

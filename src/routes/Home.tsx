@@ -11,14 +11,14 @@ import CustomButton from "../components/CustomButton";
 // import MaskedText from "../components/MaskedText";
 import Rules from "../assets/Home/Rules.svg";
 import { UserContext } from "../config/UserContext";
-import { MusicButton, MusicButtonProps } from "../components/MusicButton";
+import { MusicButton } from "../components/MusicButton";
+import { requestLogin, requestLogout } from "../utils/MetaMaskLoginFunctions";
+import { PageProps } from "../config/Router";
 
-const Home = (props: MusicButtonProps) => {
-  const { sound, musicPlaying, setMusicPlaying } = props;
+const Home = (props: PageProps) => {
+  const { sound, musicPlaying, setMusicPlaying, account, setAccount } = props;
   const navigate = useNavigate();
   // add isLoading later
-  const { currentUser } = React.useContext(UserContext);
-
   return (
     <Space>
       <Grid container>
@@ -70,6 +70,7 @@ const Home = (props: MusicButtonProps) => {
           <Grid item xs={1}>
             <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
           </Grid>
+          {/*            *************** DESO LOGIN ******************
           <Grid item>
             {currentUser && (
               <Typography sx={{ fontFamily: "Joystix", color: "white" }}>{getDisplayName(currentUser)}</Typography>
@@ -82,6 +83,31 @@ const Home = (props: MusicButtonProps) => {
               </IconButton>
             ) : (
               <IconButton onClick={() => identity.login()} size="large">
+                <LoginIcon sx={{ fontSize: "2.5rem", color: "white" }} />
+              </IconButton>
+            )}
+          </Grid>
+          <Grid item sx={{ margin: "0 10px" }}>
+            {currentUser ? (
+              <IconButton onClick={() => identity.logout()} size="large">
+                <LogoutIcon sx={{ fontSize: "2.5rem", color: "white" }} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => identity.login()} size="large">
+                <LoginIcon sx={{ fontSize: "2.5rem", color: "white" }} />
+              </IconButton>
+            )}
+          </Grid> */}
+          <Grid item>
+            {account !== "" && <Typography sx={{ fontFamily: "Joystix", color: "white" }}>{account}</Typography>}
+          </Grid>
+          <Grid item sx={{ margin: "0 10px" }}>
+            {account !== "" ? (
+              <IconButton onClick={() => requestLogout(setAccount)} size="large">
+                <LogoutIcon sx={{ fontSize: "2.5rem", color: "white" }} />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => requestLogin(setAccount)} size="large">
                 <LoginIcon sx={{ fontSize: "2.5rem", color: "white" }} />
               </IconButton>
             )}
@@ -99,7 +125,7 @@ const Home = (props: MusicButtonProps) => {
             margin: "20px 0 0 0",
           }}
         />
-        <CustomButton text="START" disabled={!currentUser} onClick={() => navigate("/game")} />
+        <CustomButton text="START" disabled={account === ""} onClick={() => navigate("/game")} />
       </Grid>
     </Space>
   );
