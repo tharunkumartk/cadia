@@ -7,11 +7,8 @@ import GameLay from "../containers/GameLay";
 import Space from "../assets/Space/Space.svg";
 import MaskedText from "../components/MaskedText";
 import LeaderboardDialog from "../components/Game/LeaderboardDialog";
-import { MusicButton } from "../components/MusicButton";
-import { PageProps } from "../config/Router";
 
-const Game = (props: PageProps) => {
-  const { sound, musicPlaying, setMusicPlaying, account } = props;
+const Game = () => {
   const navigate = useNavigate();
   const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
 
@@ -19,7 +16,7 @@ const Game = (props: PageProps) => {
     <div>
       <Grid sx={{ backgroundImage: `url(${Space})` }}>
         <Grid container sx={{ alignContent: "center", alignItems: "center" }}>
-          <Grid item xs={5} sx={{ display: "flex", justifyContent: "start" }}>
+          <Grid item xs={6} sx={{ display: "flex", justifyContent: "start" }}>
             <Button onClick={() => navigate("/home")}>
               <KeyboardArrowLeftIcon fontSize="large" sx={{ color: "white" }} />
               <MaskedText text="Back" fontSize="1rem" />
@@ -43,9 +40,6 @@ const Game = (props: PageProps) => {
               </Typography>
             </Button>
           </Grid>
-          <Grid item xs={1}>
-            <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
-          </Grid>
           <Grid item xs={0.5} sx={{ display: "flex", justifyContent: "end" }}>
             <IconButton aria-label="Settings" onClick={() => setLeaderboardOpen(true)}>
               {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
@@ -55,7 +49,7 @@ const Game = (props: PageProps) => {
         </Grid>
         <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
       </Grid>
-      <GameLay account={account} />
+      <GameLay />
     </div>
   );
 };

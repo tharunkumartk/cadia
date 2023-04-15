@@ -5,9 +5,8 @@ import { Card } from "../engine/Card";
 // confusing, should change later
 const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
 
-export interface LeaderboardData {
+interface LeaderboardData {
   displayName: string;
-  date: string;
   score: number;
 }
 
@@ -20,7 +19,7 @@ interface LeaderboardDataStore {
 
 // gets the leaderboard data from backend. need to update url to local machine
 const getLeaderboardData = (scoreCount: number) => {
-  const leaderboardDataReturn: Array<LeaderboardData> = [];
+  const leaderboardDataReturn: LeaderboardData[] = [];
   axios
     .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
       params: {
@@ -31,28 +30,7 @@ const getLeaderboardData = (scoreCount: number) => {
       // console.log(res);
       const scores = res.data;
       scores.forEach((score: any) => {
-        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
-      });
-    });
-  return leaderboardDataReturn;
-};
-
-// gets the leaderboard data from backend. need to update url to local machine
-const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string) => {
-  const leaderboardDataReturn: LeaderboardData[] = [];
-  axios
-    .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
-      params: {
-        start: startInd,
-        end: endInd,
-        query: query,
-      },
-    })
-    .then((res) => {
-      // console.log(res);
-      const scores = res.data;
-      scores.forEach((score: any) => {
-        leaderboardDataReturn.push({ displayName: score.name, date: score.date, score: score.score });
+        leaderboardDataReturn.push({displayName: score.name, score: score.score });
       });
     });
   return leaderboardDataReturn;
@@ -83,7 +61,6 @@ interface PushGameStartProps {
 }
 
 const pushGameStartData = ({ name, walletId }: PushGameStartProps) => {
-  console.log("pushing game start data");
   axios
     .post(`${BASE_URL}/event/game_start`, {
       name: name,
@@ -107,20 +84,16 @@ const getChatGPTPrompt = async (
 ) => {
   let ret = "";
   try {
-    const response = await axios.post(
-      `${BASE_URL}/chatgpt_prompt`,
-      {
-        money: playerMoney,
-        cards: gptCards,
-        community: communityCards,
-        bet: opponentBet,
-        isBigBlind: chatGPTisBigBlind,
-        past_rounds: pastRounds,
-        chatGPTCurrentBet,
-        bigBlindAmount,
-      },
-      { timeout: 1000 * 15 },
-    );
+    const response = await axios.post(`${BASE_URL}/chatgpt_prompt`, {
+      money: playerMoney,
+      cards: gptCards,
+      community: communityCards,
+      bet: opponentBet,
+      isBigBlind: chatGPTisBigBlind,
+      past_rounds: pastRounds,
+      chatGPTCurrentBet,
+      bigBlindAmount,
+    }, { timeout: 1000 * 15 });
     // console.log(`prompt: ${response.data.prompt}`);
     ret = response.data.prompt;
   } catch (error) {
@@ -142,20 +115,16 @@ const getChatGPTResponse = async (
 ) => {
   let value = { bet: -1, response: "dummy response" };
   try {
-    const response = await axios.post(
-      `${BASE_URL}/chatgpt_response`,
-      {
-        money: playerMoney,
-        cards: gptCards,
-        community: communityCards,
-        bet: opponentBet,
-        isBigBlind: chatGPTisBigBlind,
-        past_rounds: pastRounds,
-        chatGPTCurrentBet,
-        bigBlindAmount,
-      },
-      { timeout: 1000 * 15 },
-    );
+    const response = await axios.post(`${BASE_URL}/chatgpt_response`, {
+      money: playerMoney,
+      cards: gptCards,
+      community: communityCards,
+      bet: opponentBet,
+      isBigBlind: chatGPTisBigBlind,
+      past_rounds: pastRounds,
+      chatGPTCurrentBet,
+      bigBlindAmount,
+    }, { timeout: 1000 * 15 });
     value = response.data;
   } catch (error) {
     console.log("error: ", error);
@@ -164,11 +133,4 @@ const getChatGPTResponse = async (
   return value;
 };
 
-export {
-  pushLeaderboardData,
-  getLeaderboardData,
-  pushGameStartData,
-  getChatGPTResponse,
-  getChatGPTPrompt,
-  getLeaderboardDataQuery,
-};
+export { pushLeaderboardData, getLeaderboardData, pushGameStartData, getChatGPTResponse, getChatGPTPrompt };
