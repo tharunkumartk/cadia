@@ -5,7 +5,6 @@ import RequireAuth from "./RequireAuth";
 import Landing from "../routes/Landing";
 import Home from "../routes/Home";
 import Game from "../routes/Game";
-import Wager from "../routes/Wager";
 
 interface RouteSchema {
   path: string;
@@ -13,66 +12,13 @@ interface RouteSchema {
   isAuthRequired?: boolean;
 }
 
-export interface PageProps {
-  sound: HTMLAudioElement;
-  musicPlaying: boolean;
-  setMusicPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  account: string;
-  setAccount: (account: string) => void;
-}
+const routes: RouteSchema[] = [
+  { path: "/", component: <Landing /> },
+  { path: "/home", component: <Home /> },
+  { path: "/game", component: <Game />, isAuthRequired: true },
+];
 
 export default function Router() {
-  const songURL = process.env.REACT_APP_IS_DEV
-    ? "https://thecadia.xyz/BGMusic.mp3"
-    : "http://localhost:3000/BGMusic.mp3";
-  const [Sound] = React.useState(new Audio(songURL));
-  const [musicPlaying, setMusicPlaying] = React.useState(false);
-  const [account, setAccount] = React.useState("");
-  const routes: RouteSchema[] = [
-    {
-      path: "/",
-      component: <Landing sound={Sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />,
-    },
-    {
-      path: "/home",
-      component: (
-        <Home
-          sound={Sound}
-          musicPlaying={musicPlaying}
-          setMusicPlaying={setMusicPlaying}
-          account={account}
-          setAccount={setAccount}
-        />
-      ),
-    },
-    {
-      path: "/game",
-      component: (
-        <Game
-          sound={Sound}
-          musicPlaying={musicPlaying}
-          setMusicPlaying={setMusicPlaying}
-          account={account}
-          setAccount={setAccount}
-        />
-      ),
-      isAuthRequired: false,
-    },
-    {
-      path: "/wager",
-      component: (
-        <Wager
-          sound={Sound}
-          musicPlaying={musicPlaying}
-          setMusicPlaying={setMusicPlaying}
-          account={account}
-          setAccount={setAccount}
-        />
-      ),
-      isAuthRequired: false,
-    },
-  ];
-
   return (
     <Routes>
       {routes.map((route: RouteSchema) => (
