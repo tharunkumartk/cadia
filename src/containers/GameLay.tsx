@@ -33,7 +33,7 @@ import ChatGPTUpdate from "../components/Game/ChatGPTUpdate";
 import convertCardstoStrings from "../engine/cardconversion";
 import GameEnd from "../components/Game/GameEnd";
 import BigBlindIndicator from "../assets/BigBlindIndicator.svg";
-import { UserContext } from "../config/UserContext";
+// import { UserContext } from "../config/UserContext";
 // import MaskedText from "../components/MaskedText";
 
 interface GameLayProps {

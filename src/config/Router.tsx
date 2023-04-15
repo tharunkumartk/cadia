@@ -5,6 +5,7 @@ import RequireAuth from "./RequireAuth";
 import Landing from "../routes/Landing";
 import Home from "../routes/Home";
 import Game from "../routes/Game";
+import Wager from "../routes/Wager";
 
 interface RouteSchema {
   path: string;
@@ -48,6 +49,19 @@ export default function Router() {
       path: "/game",
       component: (
         <Game
+          sound={Sound}
+          musicPlaying={musicPlaying}
+          setMusicPlaying={setMusicPlaying}
+          account={account}
+          setAccount={setAccount}
+        />
+      ),
+      isAuthRequired: false,
+    },
+    {
+      path: "/wager",
+      component: (
+        <Wager
           sound={Sound}
           musicPlaying={musicPlaying}
           setMusicPlaying={setMusicPlaying}

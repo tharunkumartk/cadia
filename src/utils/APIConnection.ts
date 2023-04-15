@@ -5,8 +5,9 @@ import { Card } from "../engine/Card";
 // confusing, should change later
 const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
 
-interface LeaderboardData {
+export interface LeaderboardData {
   displayName: string;
+  date: string;
   score: number;
 }
 
@@ -19,7 +20,7 @@ interface LeaderboardDataStore {
 
 // gets the leaderboard data from backend. need to update url to local machine
 const getLeaderboardData = (scoreCount: number) => {
-  const leaderboardDataReturn: LeaderboardData[] = [];
+  const leaderboardDataReturn: Array<LeaderboardData> = [];
   axios
     .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
       params: {
@@ -30,7 +31,28 @@ const getLeaderboardData = (scoreCount: number) => {
       // console.log(res);
       const scores = res.data;
       scores.forEach((score: any) => {
-        leaderboardDataReturn.push({ displayName: score.name, score: score.score });
+        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
+      });
+    });
+  return leaderboardDataReturn;
+};
+
+// gets the leaderboard data from backend. need to update url to local machine
+const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string) => {
+  const leaderboardDataReturn: LeaderboardData[] = [];
+  axios
+    .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
+      params: {
+        start: startInd,
+        end: endInd,
+        query: query,
+      },
+    })
+    .then((res) => {
+      // console.log(res);
+      const scores = res.data;
+      scores.forEach((score: any) => {
+        leaderboardDataReturn.push({ displayName: score.name, date: score.date, score: score.score });
       });
     });
   return leaderboardDataReturn;
@@ -142,4 +164,11 @@ const getChatGPTResponse = async (
   return value;
 };
 
-export { pushLeaderboardData, getLeaderboardData, pushGameStartData, getChatGPTResponse, getChatGPTPrompt };
+export {
+  pushLeaderboardData,
+  getLeaderboardData,
+  pushGameStartData,
+  getChatGPTResponse,
+  getChatGPTPrompt,
+  getLeaderboardDataQuery,
+};
