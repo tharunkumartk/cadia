@@ -5,9 +5,8 @@ import { Card } from "../engine/Card";
 // confusing, should change later
 const BASE_URL = process.env.REACT_APP_IS_DEV ? "https://www.thecadia.xyz" : "http://localhost:8080";
 
-export interface LeaderboardData {
+interface LeaderboardData {
   displayName: string;
-  date: string;
   score: number;
 }
 
@@ -20,7 +19,7 @@ interface LeaderboardDataStore {
 
 // gets the leaderboard data from backend. need to update url to local machine
 const getLeaderboardData = (scoreCount: number) => {
-  const leaderboardDataReturn: Array<LeaderboardData> = [];
+  const leaderboardDataReturn: LeaderboardData[] = [];
   axios
     .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
       params: {
@@ -83,7 +82,6 @@ interface PushGameStartProps {
 }
 
 const pushGameStartData = ({ name, walletId }: PushGameStartProps) => {
-  console.log("pushing game start data");
   axios
     .post(`${BASE_URL}/event/game_start`, {
       name: name,
@@ -107,20 +105,16 @@ const getChatGPTPrompt = async (
 ) => {
   let ret = "";
   try {
-    const response = await axios.post(
-      `${BASE_URL}/chatgpt_prompt`,
-      {
-        money: playerMoney,
-        cards: gptCards,
-        community: communityCards,
-        bet: opponentBet,
-        isBigBlind: chatGPTisBigBlind,
-        past_rounds: pastRounds,
-        chatGPTCurrentBet,
-        bigBlindAmount,
-      },
-      { timeout: 1000 * 15 },
-    );
+    const response = await axios.post(`${BASE_URL}/chatgpt_prompt`, {
+      money: playerMoney,
+      cards: gptCards,
+      community: communityCards,
+      bet: opponentBet,
+      isBigBlind: chatGPTisBigBlind,
+      past_rounds: pastRounds,
+      chatGPTCurrentBet,
+      bigBlindAmount,
+    }, { timeout: 1000 * 15 });
     // console.log(`prompt: ${response.data.prompt}`);
     ret = response.data.prompt;
   } catch (error) {
@@ -142,20 +136,16 @@ const getChatGPTResponse = async (
 ) => {
   let value = { bet: -1, response: "dummy response" };
   try {
-    const response = await axios.post(
-      `${BASE_URL}/chatgpt_response`,
-      {
-        money: playerMoney,
-        cards: gptCards,
-        community: communityCards,
-        bet: opponentBet,
-        isBigBlind: chatGPTisBigBlind,
-        past_rounds: pastRounds,
-        chatGPTCurrentBet,
-        bigBlindAmount,
-      },
-      { timeout: 1000 * 15 },
-    );
+    const response = await axios.post(`${BASE_URL}/chatgpt_response`, {
+      money: playerMoney,
+      cards: gptCards,
+      community: communityCards,
+      bet: opponentBet,
+      isBigBlind: chatGPTisBigBlind,
+      past_rounds: pastRounds,
+      chatGPTCurrentBet,
+      bigBlindAmount,
+    }, { timeout: 1000 * 15 });
     value = response.data;
   } catch (error) {
     console.log("error: ", error);
@@ -164,11 +154,4 @@ const getChatGPTResponse = async (
   return value;
 };
 
-export {
-  pushLeaderboardData,
-  getLeaderboardData,
-  pushGameStartData,
-  getChatGPTResponse,
-  getChatGPTPrompt,
-  getLeaderboardDataQuery,
-};
+export { pushLeaderboardData, getLeaderboardData, pushGameStartData, getChatGPTResponse, getChatGPTPrompt };

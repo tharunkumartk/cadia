@@ -11,8 +11,7 @@ import { MusicButton } from "../components/MusicButton";
 import { PageProps } from "../config/Router";
 import CaptchaDialog from "../components/Game/CaptchaDialog";
 
-const Game = (props: PageProps) => {
-  const { sound, musicPlaying, setMusicPlaying, account } = props;
+const Game = () => {
   const navigate = useNavigate();
   const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
   const [captcha, setCaptcha] = React.useState<boolean>(true);
