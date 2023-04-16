@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card } from "../engine/Card";
 
 // confusing, should change later
-const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "https://www.thecadia.xyz" : "http://localhost:8080";
 
 interface LeaderboardData {
   displayName: string;
@@ -30,9 +30,30 @@ const getLeaderboardData = (scoreCount: number) => {
       // console.log(res);
       const scores = res.data;
       scores.forEach((score: any) => {
-        leaderboardDataReturn.push({displayName: score.name, score: score.score });
+        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
       });
     });
+  return leaderboardDataReturn;
+};
+
+// gets the leaderboard data from backend. need to update url to local machine
+const getLeaderboardDataQuery = async (startInd: number, endInd: number, query: string) => {
+  const leaderboardDataReturn: Array<LeaderboardData> = [];
+  await axios
+    .post<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
+      start: startInd,
+      end: endInd,
+      query,
+    })
+    .then((res: any) => {
+      // console.log(res);
+      const scores = res.data.response;
+
+      for (let i = 0; i < scores.length; i++) {
+        leaderboardDataReturn.push({ displayName: scores[i].name, date: scores[i].created_at, score: scores[i].score });
+      }
+    });
+  console.log(leaderboardDataReturn);
   return leaderboardDataReturn;
 };
 
