@@ -41,7 +41,7 @@ const getLeaderboardData = (scoreCount: number) => {
 const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string) => {
   const leaderboardDataReturn: LeaderboardData[] = [];
   axios
-    .get<LeaderboardData[]>(`${BASE_URL}/leaderboard`, {
+    .get<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
       params: {
         start: startInd,
         end: endInd,
@@ -51,6 +51,7 @@ const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string
     .then((res) => {
       // console.log(res);
       const scores = res.data;
+      console.log(res);
       scores.forEach((score: any) => {
         leaderboardDataReturn.push({ displayName: score.name, date: score.date, score: score.score });
       });
