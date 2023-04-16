@@ -3,11 +3,12 @@ import axios from "axios";
 import { Card } from "../engine/Card";
 
 // confusing, should change later
-const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "https://www.thecadia.xyz" : "http://localhost:8080";
 
-interface LeaderboardData {
+export interface LeaderboardData {
   displayName: string;
   score: number;
+  date: string;
 }
 
 interface LeaderboardDataStore {
@@ -30,9 +31,30 @@ const getLeaderboardData = (scoreCount: number) => {
       // console.log(res);
       const scores = res.data;
       scores.forEach((score: any) => {
-        leaderboardDataReturn.push({displayName: score.name, score: score.score });
+        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
       });
     });
+  return leaderboardDataReturn;
+};
+
+// gets the leaderboard data from backend. need to update url to local machine
+const getLeaderboardDataQuery = async (startInd: number, endInd: number, query: string) => {
+  const leaderboardDataReturn: Array<LeaderboardData> = [];
+  await axios
+    .post<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
+      start: startInd,
+      end: endInd,
+      query,
+    })
+    .then((res: any) => {
+      // console.log(res);
+      const scores = res.data.response;
+
+      for (let i = 0; i < scores.length; i++) {
+        leaderboardDataReturn.push({ displayName: scores[i].name, date: scores[i].created_at, score: scores[i].score });
+      }
+    });
+  console.log(leaderboardDataReturn);
   return leaderboardDataReturn;
 };
 
@@ -84,16 +106,20 @@ const getChatGPTPrompt = async (
 ) => {
   let ret = "";
   try {
-    const response = await axios.post(`${BASE_URL}/chatgpt_prompt`, {
-      money: playerMoney,
-      cards: gptCards,
-      community: communityCards,
-      bet: opponentBet,
-      isBigBlind: chatGPTisBigBlind,
-      past_rounds: pastRounds,
-      chatGPTCurrentBet,
-      bigBlindAmount,
-    }, { timeout: 1000 * 15 });
+    const response = await axios.post(
+      `${BASE_URL}/chatgpt_prompt`,
+      {
+        money: playerMoney,
+        cards: gptCards,
+        community: communityCards,
+        bet: opponentBet,
+        isBigBlind: chatGPTisBigBlind,
+        past_rounds: pastRounds,
+        chatGPTCurrentBet,
+        bigBlindAmount,
+      },
+      { timeout: 1000 * 15 },
+    );
     // console.log(`prompt: ${response.data.prompt}`);
     ret = response.data.prompt;
   } catch (error) {
@@ -115,16 +141,20 @@ const getChatGPTResponse = async (
 ) => {
   let value = { bet: -1, response: "dummy response" };
   try {
-    const response = await axios.post(`${BASE_URL}/chatgpt_response`, {
-      money: playerMoney,
-      cards: gptCards,
-      community: communityCards,
-      bet: opponentBet,
-      isBigBlind: chatGPTisBigBlind,
-      past_rounds: pastRounds,
-      chatGPTCurrentBet,
-      bigBlindAmount,
-    }, { timeout: 1000 * 15 });
+    const response = await axios.post(
+      `${BASE_URL}/chatgpt_response`,
+      {
+        money: playerMoney,
+        cards: gptCards,
+        community: communityCards,
+        bet: opponentBet,
+        isBigBlind: chatGPTisBigBlind,
+        past_rounds: pastRounds,
+        chatGPTCurrentBet,
+        bigBlindAmount,
+      },
+      { timeout: 1000 * 15 },
+    );
     value = response.data;
   } catch (error) {
     console.log("error: ", error);
@@ -133,4 +163,11 @@ const getChatGPTResponse = async (
   return value;
 };
 
-export { pushLeaderboardData, getLeaderboardData, pushGameStartData, getChatGPTResponse, getChatGPTPrompt };
+export {
+  pushLeaderboardData,
+  getLeaderboardData,
+  pushGameStartData,
+  getChatGPTResponse,
+  getChatGPTPrompt,
+  getLeaderboardDataQuery,
+};

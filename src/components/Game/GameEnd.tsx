@@ -29,6 +29,7 @@ interface GameEndProps {
   balance: number;
   result: string;
   messageData: Message[];
+  account: string;
 }
 interface NextGameButtonProps {
   resetGameState: (arg0: boolean) => void;
@@ -108,7 +109,17 @@ const CashOutButton = ({ userScore }: CashOutButtonProps) => {
   );
 };
 
-const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, result, messageData }: GameEndProps) => {
+const GameEnd = ({
+  open,
+  handleClose,
+  resetGameState,
+  gameState,
+  pot,
+  balance,
+  result,
+  messageData,
+  account,
+}: GameEndProps) => {
   // TODO: should return a screen maybe, not just null
   if (gameState.players.length === 0) return null;
   const ChatGPTCards = convertCardstoStrings(gameState.players[1].hand);
@@ -379,7 +390,12 @@ const GameEnd = ({ open, handleClose, resetGameState, gameState, pot, balance, r
         <ChatDialog open={messageOpen} handleClose={() => setMessageOpen(false)} messageData={messageData} />
         <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
 
-        <CashOutDialog open={cashOutDialogOpen} handleClose={() => setCashOutDialogOpen(false)} userScore={balance} />
+        <CashOutDialog
+          open={cashOutDialogOpen}
+          handleClose={() => setCashOutDialogOpen(false)}
+          userScore={balance}
+          account={account}
+        />
       </div>
     </Modal>
   );
