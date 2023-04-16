@@ -10,7 +10,12 @@ import WageringBG from "../assets/Wager/WageringBG.png";
 import { MusicButton } from "../components/MusicButton";
 import { PageProps } from "../config/Router";
 import searchbar from "../assets/Wager/searchbar.png";
+import addressEntry from "../assets/Wager/addressEntry.png";
+import WagerEntry from "../assets/Wager/BetThing.png";
 import { LeaderboardData, getLeaderboardData, getLeaderboardDataQuery } from "../utils/APIConnection";
+import CustomButton from "../components/CustomButton";
+import GameButton from "../components/Game/GameButton";
+import GameBaseButton from "../assets/Game/GameBaseButton.svg";
 
 interface WagerSearchProps {
   query: string;
@@ -18,6 +23,35 @@ interface WagerSearchProps {
   wager: number;
   setWager: React.Dispatch<React.SetStateAction<number>>;
 }
+
+interface WagerButtonProps {
+  text: string;
+  onClick: () => void;
+  disabled?: boolean;
+}
+
+const WagerButton = ({ text, onClick, disabled }: WagerButtonProps) => {
+  return (
+    <Grid container sx={{ margin: "20px" }}>
+      <Button
+        onClick={onClick}
+        sx={{
+          backgroundImage: `url(${GameBaseButton})`,
+          backgroundSize: "100% 100%",
+          width: "15vw",
+          height: "10vh",
+          opacity: disabled ? "50%" : "100%",
+          cursor: disabled ? "default" : "pointer",
+          display: "block",
+        }}
+        disabled={disabled}
+      >
+        <MaskedText text={text} fontSize="1.25rem" />
+      </Button>
+    </Grid>
+  );
+};
+
 const LeaderboardEntry = (props: LeaderboardData) => {
   const { displayName, date, score } = props;
   return (
@@ -107,22 +141,29 @@ const WagerSearch = (props: WagerSearchProps) => {
             <Grid item xs={11.25}>
               <TextField
                 sx={{
-                  height: "6vh",
                   width: "100%",
+                  justifyItems: "center",
                 }}
                 variant="standard"
+                label="Search for an address"
+                InputLabelProps={{
+                  sx: {
+                    fontFamily: "Joystix",
+                    fontSize: ".5rem",
+                    color: "white",
+                  },
+                }}
                 InputProps={{
                   style: {
                     fontFamily: "Joystix",
-                    fontSize: "100%",
-                    color: "black",
+                    fontSize: "1rem",
+                    color: "white",
                     outline: "none",
-                    marginBottom: "-15px",
                   },
                   disableUnderline: false,
                 }}
                 onChange={(event) => {
-                  setLeaderboard(getLeaderboardDataQuery(startInd, endInd, query));
+                  setLeaderboard(getLeaderboardDataQuery(0, 50, query));
                   setQuery(event.target.value);
                 }}
               />
@@ -161,7 +202,7 @@ const WagerSearch = (props: WagerSearchProps) => {
               </Grid>
             </Grid>
             {leaderboard?.map((data: LeaderboardData) => (
-              <LeaderboardEntry {...data} />
+              <LeaderboardEntry date={data.date.substring(5, 11)} displayName={data.displayName} score={data.score} />
             ))}
           </Grid>
         </Grid>
@@ -170,10 +211,127 @@ const WagerSearch = (props: WagerSearchProps) => {
   );
 };
 
+interface MakeWagerProps {
+  wager: number;
+  setWager: React.Dispatch<React.SetStateAction<number>>;
+  wagerOnAddress: string;
+  setWagerOnAddress: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const MakeWager = (props: MakeWagerProps) => {
+  const { wager, setWager, wagerOnAddress, setWagerOnAddress } = props;
+  return (
+    <Grid
+      container
+      sx={{
+        height: "20vh",
+        width: "100vw",
+        display: "flex",
+        alignContent: "center",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Grid
+        item
+        xs={6}
+        sx={{
+          backgroundImage: `url(${addressEntry})`,
+          backgroundSize: "100% 100%",
+          height: "10vh",
+          width: "50vw",
+          marginLeft: "20px",
+          marginRight: "20px",
+        }}
+      >
+        <Grid item xs={11} sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <TextField
+            sx={{
+              width: "100%",
+              justifyItems: "center",
+              marginLeft: "20px",
+              marginTop: "15px",
+            }}
+            label="Enter address"
+            InputLabelProps={{
+              sx: {
+                fontFamily: "Joystix",
+                fontSize: "100%",
+                color: "white",
+              },
+            }}
+            variant="standard"
+            InputProps={{
+              style: {
+                fontFamily: "Joystix",
+                fontSize: "100%",
+                color: "white",
+              },
+            }}
+            onChange={(event) => {
+              setWagerOnAddress(event.target.value);
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        xs={1.5}
+        sx={{
+          backgroundImage: `url(${WagerEntry})`,
+          backgroundSize: "100% 100%",
+          height: "10vh",
+          width: "50vw",
+          marginLeft: "20px",
+          marginRight: "20px",
+        }}
+      >
+        <Grid item xs={10} sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <TextField
+            sx={{
+              width: "100%",
+              justifyItems: "center",
+              marginLeft: "20px",
+              marginTop: "15px",
+            }}
+            label="ETH AMT"
+            InputLabelProps={{
+              sx: {
+                fontFamily: "Joystix",
+                fontSize: "100%",
+                color: "white",
+              },
+            }}
+            variant="standard"
+            value={wager}
+            InputProps={{
+              style: {
+                fontFamily: "Joystix",
+                fontSize: "100%",
+                color: "white",
+                outline: "none",
+                marginBottom: "-15px",
+              },
+              disableUnderline: false,
+            }}
+            onChange={(event) => {
+              const numericValue = event.target.value.replace(/[^0-9]/g, ""); // remove non-numeric characters
+              setWager(Number(numericValue));
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid item xs={1.5} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <WagerButton text="Wager" onClick={() => {}} />
+      </Grid>
+    </Grid>
+  );
+};
+
 const Wager = (props: PageProps) => {
   const { sound, musicPlaying, setMusicPlaying, account } = props;
   const navigate = useNavigate();
-
+  const [wagerOnAddress, setWagerOnAddress] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [wager, setWager] = React.useState(0);
   console.log(query);
@@ -213,6 +371,12 @@ const Wager = (props: PageProps) => {
           <Typography sx={{ fontFamily: "Joystix", fontSize: "1.5rem", color: "white" }}>Wagering</Typography>
         </Grid>
         <WagerSearch query={query} setQuery={setQuery} wager={wager} setWager={setWager} />
+        <MakeWager
+          wager={wager}
+          setWager={setWager}
+          wagerOnAddress={wagerOnAddress}
+          setWagerOnAddress={setWagerOnAddress}
+        />
       </Grid>
     </div>
   );
