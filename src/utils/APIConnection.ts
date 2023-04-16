@@ -38,21 +38,23 @@ const getLeaderboardData = (scoreCount: number) => {
 };
 
 // gets the leaderboard data from backend. need to update url to local machine
-const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string) => {
+const getLeaderboardDataQuery = async (startInd: number, endInd: number, query: string) => {
   const leaderboardDataReturn: Array<LeaderboardData> = [];
-  axios
+  await axios
     .post<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
       start: startInd,
       end: endInd,
       query,
     })
-    .then((res) => {
+    .then((res: any) => {
       // console.log(res);
-      const scores = res.data;
-      scores.forEach((score: any) => {
-        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
-      });
+      const scores = res.data.response;
+
+      for (let i = 0; i < scores.length; i++) {
+        leaderboardDataReturn.push({ displayName: scores[i].name, date: scores[i].created_at, score: scores[i].score });
+      }
     });
+  console.log(leaderboardDataReturn);
   return leaderboardDataReturn;
 };
 

@@ -9,53 +9,59 @@ import MaskedText from "../components/MaskedText";
 import LeaderboardDialog from "../components/Game/LeaderboardDialog";
 import { MusicButton } from "../components/MusicButton";
 import { PageProps } from "../config/Router";
+import CaptchaDialog from "../components/Game/CaptchaDialog";
 
 const Game = (props: PageProps) => {
   const { sound, musicPlaying, setMusicPlaying, account } = props;
   const navigate = useNavigate();
   const [leaderboardOpen, setLeaderboardOpen] = React.useState<boolean>(false);
-
+  const [captcha, setCaptcha] = React.useState<boolean>(true);
   return (
     <div>
-      <Grid sx={{ backgroundImage: `url(${Space})` }}>
-        <Grid container sx={{ alignContent: "center", alignItems: "center" }}>
-          <Grid item xs={5} sx={{ display: "flex", justifyContent: "start" }}>
-            <Button onClick={() => navigate("/home")}>
-              <KeyboardArrowLeftIcon fontSize="large" sx={{ color: "white" }} />
-              <MaskedText text="Back" fontSize="1rem" />
-            </Button>
+      <CaptchaDialog open={captcha} handleClose={() => {}} closeCaptcha={() => setCaptcha(false)} account={account} />
+      {captcha && (
+        <div>
+          <Grid sx={{ backgroundImage: `url(${Space})` }}>
+            <Grid container sx={{ alignContent: "center", alignItems: "center" }}>
+              <Grid item xs={5} sx={{ display: "flex", justifyContent: "start" }}>
+                <Button onClick={() => navigate("/home")}>
+                  <KeyboardArrowLeftIcon fontSize="large" sx={{ color: "white" }} />
+                  <MaskedText text="Back" fontSize="1rem" />
+                </Button>
+              </Grid>
+              <Grid item xs={5.5} sx={{ display: "flex", justifyContent: "end" }}>
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#EB9BD5", margin: "10px" }}
+                  onClick={() => window.open("https://forms.gle/rSnAWb2AxYE4mB6W6")}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: "Joystix",
+                      fontSize: "1rem",
+                      color: "white",
+                      // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
+                    }}
+                  >
+                    Feedback
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item xs={1}>
+                <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
+              </Grid>
+              <Grid item xs={0.5} sx={{ display: "flex", justifyContent: "end" }}>
+                <IconButton aria-label="Settings" onClick={() => setLeaderboardOpen(true)}>
+                  {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
+                  <LeaderboardIcon fontSize="large" sx={{ color: "white" }} />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
           </Grid>
-          <Grid item xs={5.5} sx={{ display: "flex", justifyContent: "end" }}>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: "#EB9BD5", margin: "10px" }}
-              onClick={() => window.open("https://forms.gle/rSnAWb2AxYE4mB6W6")}
-            >
-              <Typography
-                sx={{
-                  fontFamily: "Joystix",
-                  fontSize: "1rem",
-                  color: "white",
-                  // textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
-                }}
-              >
-                Feedback
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={1}>
-            <MusicButton sound={sound} musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />
-          </Grid>
-          <Grid item xs={0.5} sx={{ display: "flex", justifyContent: "end" }}>
-            <IconButton aria-label="Settings" onClick={() => setLeaderboardOpen(true)}>
-              {/* <img src={SettingsWheel} alt="Settings Button" style={{ width: "3vw" }} /> */}
-              <LeaderboardIcon fontSize="large" sx={{ color: "white" }} />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <LeaderboardDialog open={leaderboardOpen} handleClose={() => setLeaderboardOpen(false)} />
-      </Grid>
-      <GameLay account={account} />
+          <GameLay account={account} />
+        </div>
+      )}
     </div>
   );
 };

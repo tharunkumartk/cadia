@@ -34,7 +34,7 @@ const LeaderboardDialog = ({ open, handleClose }: LeaderboardDialogProps) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogContent sx={{ backgroundColor: "black", width: "80vw", height: "80vh" }}>
+      <DialogContent sx={{ backgroundColor: "black", width: "50vw", height: "50vh" }}>
         <Grid
           container
           sx={{

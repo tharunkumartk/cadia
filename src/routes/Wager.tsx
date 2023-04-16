@@ -1,9 +1,12 @@
 import * as React from "react";
-import { Box, Button, Grid, IconButton, Input, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ethers } from "ethers";
 import Space from "../assets/Space/Space.svg";
 import MaskedText from "../components/MaskedText";
 import WageringBG from "../assets/Wager/WageringBG.png";
@@ -12,16 +15,22 @@ import { PageProps } from "../config/Router";
 import searchbar from "../assets/Wager/searchbar.png";
 import addressEntry from "../assets/Wager/addressEntry.png";
 import WagerEntry from "../assets/Wager/BetThing.png";
-import { LeaderboardData, getLeaderboardData, getLeaderboardDataQuery } from "../utils/APIConnection";
-import CustomButton from "../components/CustomButton";
-import GameButton from "../components/Game/GameButton";
+import { LeaderboardData, getLeaderboardDataQuery } from "../utils/APIConnection";
 import GameBaseButton from "../assets/Game/GameBaseButton.svg";
+import { error } from "console";
+import { AnyNsRecord } from "dns";
 
 interface WagerSearchProps {
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   wager: number;
   setWager: React.Dispatch<React.SetStateAction<number>>;
+  leaderboard: LeaderboardData[];
+  setLeaderboard: React.Dispatch<React.SetStateAction<LeaderboardData[]>>;
+  startInd: number;
+  setStartInd: React.Dispatch<React.SetStateAction<number>>;
+  endInd: number;
+  setEndInd: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface WagerButtonProps {
@@ -52,25 +61,51 @@ const WagerButton = ({ text, onClick, disabled }: WagerButtonProps) => {
   );
 };
 
-const LeaderboardEntry = (props: LeaderboardData) => {
-  const { displayName, date, score } = props;
+interface LeaderboardEntryProps {
+  displayName: string;
+  date: string;
+  score: number;
+  key?: number;
+}
+
+const LeaderboardEntry = (props: LeaderboardEntryProps) => {
+  const { displayName, date, score, key } = props;
+  console.log(displayName);
   return (
-    <Grid container>
+    <Grid key={key} container>
       <Grid item xs={8} sx={{ alignContent: "flex-start", height: "1.5vh", margin: "-2px", paddingTop: "5px" }}>
-        <Typography sx={{ fontFamily: "Joystix", fontSize: "100%", color: "white", textAlign: "left" }}>
+        <Typography
+          sx={{ fontFamily: "Minecraft", letterSpacing: "0.1rem", fontSize: "100%", color: "white", textAlign: "left" }}
+        >
           {displayName}
         </Typography>
       </Grid>
       <Grid item xs={2}>
         <Box sx={{ borderLeft: "3px solid white", paddingTop: "5px" }}>
-          <Typography sx={{ fontFamily: "Joystix", fontSize: "100%", color: "white", textAlign: "center" }}>
+          <Typography
+            sx={{
+              fontFamily: "Minecraft",
+              letterSpacing: "0.1rem",
+              fontSize: "100%",
+              color: "white",
+              textAlign: "center",
+            }}
+          >
             {date}
           </Typography>
         </Box>
       </Grid>
       <Grid item xs={2}>
         <Box sx={{ borderLeft: "3px solid white", paddingTop: "5px" }}>
-          <Typography sx={{ fontFamily: "Joystix", fontSize: "100%", color: "white", textAlign: "center" }}>
+          <Typography
+            sx={{
+              fontFamily: "Minecraft",
+              letterSpacing: "0.1rem",
+              fontSize: "100%",
+              color: "white",
+              textAlign: "center",
+            }}
+          >
             {score}
           </Typography>
         </Box>
@@ -79,11 +114,21 @@ const LeaderboardEntry = (props: LeaderboardData) => {
   );
 };
 
+const onChangeSearch = async (
+  setLeaderboard: React.Dispatch<React.SetStateAction<LeaderboardData[]>>,
+  query: string,
+  startInd: number,
+  endInd: number,
+) => {
+  const resp = await getLeaderboardDataQuery(startInd, endInd, query);
+  console.log(resp);
+  setLeaderboard(resp);
+};
+
 const WagerSearch = (props: WagerSearchProps) => {
-  const { query, setQuery, wager, setWager } = props;
-  const [leaderboard, setLeaderboard] = React.useState<LeaderboardData[]>();
-  const [startInd, setStartInd] = React.useState(0);
-  const [endInd, setEndInd] = React.useState(0);
+  const { query, setQuery, wager, setWager, leaderboard, setLeaderboard, startInd, setStartInd, endInd, setEndInd } =
+    props;
+
   return (
     <Grid
       container
@@ -109,62 +154,91 @@ const WagerSearch = (props: WagerSearchProps) => {
         }}
       >
         <Grid container sx={{ justifyContent: "center" }}>
-          <Grid
-            container
-            sx={{
-              backgroundImage: `url(${searchbar})`,
-              backgroundSize: "100% 100%",
-              height: "6vh",
-              width: "77vw",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "0px 10px 10px 10px",
-            }}
-          >
+          <Grid item xs={0.25} />
+          <Grid item xs={9} sx={{ textAlign: "center" }}>
             <Grid
-              item
-              xs={0.75}
+              container
               sx={{
-                // align in the middle of the search bar
-                display: "flex",
-                justifyContent: "left",
+                backgroundImage: `url(${searchbar})`,
+                backgroundSize: "100% 100%",
+                height: "8.5vh",
+                width: "100%",
+                justifyContent: "center",
                 alignItems: "center",
+                padding: "0px 10px 10px 10px",
               }}
             >
-              <SearchIcon />
-            </Grid>
-            <Grid item xs={11.25}>
-              <TextField
+              <Grid
+                item
+                xs={0.75}
                 sx={{
-                  width: "100%",
-                  justifyItems: "center",
+                  // align in the middle of the search bar
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "15px",
                 }}
-                variant="standard"
-                label="Search for an address"
-                InputLabelProps={{
-                  sx: {
-                    fontFamily: "Joystix",
-                    fontSize: ".5rem",
-                    color: "white",
-                  },
-                }}
-                InputProps={{
-                  style: {
-                    fontFamily: "Joystix",
-                    fontSize: "1rem",
-                    color: "white",
-                    outline: "none",
-                  },
-                  disableUnderline: false,
-                }}
-                onChange={(event) => {
-                  console.log(leaderboard);
-                  setQuery(event.target.value);
-                  console.log(query);
-                  setLeaderboard(getLeaderboardDataQuery(0, 50, query));
-                }}
-              />
+              >
+                <SearchIcon sx={{ color: "white", width: "100%", height: "100%" }} />
+              </Grid>
+              <Grid item xs={11.25}>
+                <TextField
+                  sx={{
+                    width: "100%",
+                  }}
+                  variant="standard"
+                  label="Search for an address"
+                  InputLabelProps={{
+                    sx: {
+                      fontFamily: "Joystix",
+                      fontSize: "1rem",
+                      color: "white",
+                    },
+                  }}
+                  InputProps={{
+                    style: {
+                      fontFamily: "Minecraft",
+                      fontSize: "1rem",
+                      letterSpacing: "0.1rem",
+                      color: "white",
+                      outline: "none",
+                    },
+                    disableUnderline: false,
+                  }}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                  }}
+                />
+              </Grid>
             </Grid>
+          </Grid>
+          <Grid item xs={0.75} sx={{ textAlign: "center" }}>
+            <IconButton
+              onClick={() => {
+                if (endInd > 0 && startInd > 0) {
+                  setStartInd(startInd - 9);
+                  setEndInd(endInd - 9);
+                }
+                if (startInd < 0) {
+                  setStartInd(0);
+                  setEndInd(9);
+                }
+                onChangeSearch(setLeaderboard, query, startInd, endInd);
+              }}
+            >
+              <ArrowBackIosIcon sx={{ color: "white" }} />
+            </IconButton>
+          </Grid>
+          <Grid item xs={0.75} sx={{ textAlign: "center" }}>
+            <IconButton
+              onClick={() => {
+                setStartInd(startInd + 9);
+                setEndInd(endInd + 9);
+                onChangeSearch(setLeaderboard, query, startInd, endInd);
+              }}
+            >
+              <ArrowForwardIosIcon sx={{ color: "white" }} />
+            </IconButton>
           </Grid>
           <Grid container sx={{ paddingLeft: "100px", paddingRight: "100px", display: "block", marginTop: "20px" }}>
             <Grid container sx={{ marginLeft: "-4px" }}>
@@ -198,8 +272,14 @@ const WagerSearch = (props: WagerSearchProps) => {
                 </Box>
               </Grid>
             </Grid>
-            {leaderboard?.map((data: LeaderboardData) => (
-              <LeaderboardEntry date={data.date.substring(5, 11)} displayName={data.displayName} score={data.score} />
+            {leaderboard?.map((data: LeaderboardData, index: number) => (
+              <LeaderboardEntry
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                date={data.date.substring(5, 11)}
+                displayName={data.displayName}
+                score={data.score}
+              />
             ))}
           </Grid>
         </Grid>
@@ -260,8 +340,9 @@ const MakeWager = (props: MakeWagerProps) => {
             variant="standard"
             InputProps={{
               style: {
-                fontFamily: "Joystix",
+                fontFamily: "Minecraft",
                 fontSize: "100%",
+                letterSpacing: "0.1rem",
                 color: "white",
               },
             }}
@@ -319,7 +400,19 @@ const MakeWager = (props: MakeWagerProps) => {
         </Grid>
       </Grid>
       <Grid item xs={1.5} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <WagerButton text="Wager" onClick={() => {}} />
+        <WagerButton
+          text="Wager"
+          onClick={() => {
+            console.log("Wagering");
+            if (window.ethereum) {
+              const providers = new ethers.providers.Web3Provider(window.ethereum as any);
+              const signer = providers.getSigner();
+              const contractAddress = process.env.CONTRACT_ADDRESS ? process.env.CONTRACT_ADDRESS : " ";
+
+              const contract = new ethers.Contract(contractAddress, contractABI, signer);
+            }
+          }}
+        />
       </Grid>
     </Grid>
   );
@@ -329,9 +422,14 @@ const Wager = (props: PageProps) => {
   const { sound, musicPlaying, setMusicPlaying, account } = props;
   const navigate = useNavigate();
   const [wagerOnAddress, setWagerOnAddress] = React.useState("");
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(" ");
   const [wager, setWager] = React.useState(0);
-  console.log(query);
+  const [leaderboard, setLeaderboard] = React.useState<LeaderboardData[]>([]);
+  const [startInd, setStartInd] = React.useState(0);
+  const [endInd, setEndInd] = React.useState(9);
+  React.useEffect(() => {
+    onChangeSearch(setLeaderboard, query, startInd, endInd);
+  }, [query]);
   return (
     <div>
       <Grid sx={{ backgroundImage: `url(${Space})` }}>
@@ -367,7 +465,18 @@ const Wager = (props: PageProps) => {
         <Grid container sx={{ justifyContent: "center", paddingTop: "10px", paddingBottom: "15px" }}>
           <Typography sx={{ fontFamily: "Joystix", fontSize: "1.5rem", color: "white" }}>Wagering</Typography>
         </Grid>
-        <WagerSearch query={query} setQuery={setQuery} wager={wager} setWager={setWager} />
+        <WagerSearch
+          query={query}
+          setQuery={setQuery}
+          wager={wager}
+          setWager={setWager}
+          leaderboard={leaderboard}
+          setLeaderboard={setLeaderboard}
+          startInd={startInd}
+          setStartInd={setStartInd}
+          endInd={endInd}
+          setEndInd={setEndInd}
+        />
         <MakeWager
           wager={wager}
           setWager={setWager}
