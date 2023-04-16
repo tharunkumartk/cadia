@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card } from "../engine/Card";
 
 // confusing, should change later
-const BASE_URL = process.env.REACT_APP_IS_DEV ? "http://localhost:8080" : "https://www.thecadia.xyz";
+const BASE_URL = process.env.REACT_APP_IS_DEV ? "https://www.thecadia.xyz" : "http://localhost:8080";
 
 export interface LeaderboardData {
   displayName: string;
@@ -39,21 +39,18 @@ const getLeaderboardData = (scoreCount: number) => {
 
 // gets the leaderboard data from backend. need to update url to local machine
 const getLeaderboardDataQuery = (startInd: number, endInd: number, query: string) => {
-  const leaderboardDataReturn: LeaderboardData[] = [];
+  const leaderboardDataReturn: Array<LeaderboardData> = [];
   axios
-    .get<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
-      params: {
-        start: startInd,
-        end: endInd,
-        query: query,
-      },
+    .post<LeaderboardData[]>(`${BASE_URL}/searchwallet`, {
+      start: startInd,
+      end: endInd,
+      query,
     })
     .then((res) => {
       // console.log(res);
       const scores = res.data;
-      console.log(res);
       scores.forEach((score: any) => {
-        leaderboardDataReturn.push({ displayName: score.name, date: score.date, score: score.score });
+        leaderboardDataReturn.push({ displayName: score.name, date: score.created_at, score: score.score });
       });
     });
   return leaderboardDataReturn;

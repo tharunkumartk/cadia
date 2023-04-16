@@ -84,11 +84,6 @@ const WagerSearch = (props: WagerSearchProps) => {
   const [leaderboard, setLeaderboard] = React.useState<LeaderboardData[]>();
   const [startInd, setStartInd] = React.useState(0);
   const [endInd, setEndInd] = React.useState(0);
-  React.useEffect(() => {
-    const data = getLeaderboardData(10);
-    setLeaderboard(data);
-    console.log(data.pop());
-  }, []);
   return (
     <Grid
       container
@@ -163,8 +158,10 @@ const WagerSearch = (props: WagerSearchProps) => {
                   disableUnderline: false,
                 }}
                 onChange={(event) => {
-                  setLeaderboard(getLeaderboardDataQuery(0, 50, query));
+                  console.log(leaderboard);
                   setQuery(event.target.value);
+                  console.log(query);
+                  setLeaderboard(getLeaderboardDataQuery(0, 50, query));
                 }}
               />
             </Grid>
