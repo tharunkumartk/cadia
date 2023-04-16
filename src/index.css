@@ -86,10 +86,3 @@ nav a, nav button {
    url("./assets/fonts/Joystix/joystix.ttf") format("truetype");
   font-weight: bold;
   }
-
-  @font-face {
-    font-family: "Minecraft";
-    src: local("Minecraft"),
-     url("./assets/fonts/Minecraft/minecraft.ttf") format("truetype");
-    font-weight: bold;
-    }
