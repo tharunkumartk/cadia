@@ -6,11 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ContractInterface, ethers } from "ethers";
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import { Alchemy, Network } from "alchemy-sdk";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import web3 from "web3";
+import { ethers } from "ethers";
 import { Buffer } from "buffer";
 import Space from "../assets/Space/Space.svg";
 import MaskedText from "../components/MaskedText";
@@ -306,7 +302,7 @@ const makeBet = async (wager: number, wagerOnAddress: string, proofState: Buffer
   console.log("Wagering");
   if (window.ethereum) {
     const config = {
-      apiKey: "OWLoAn_79upNp7SRLpFI43XKioIntk0o",
+      apiKey: "insert-api-key",
     };
     // const alchemyProvider = new ethers.providers.AlchemyProvider("arbitrum-goerli", config.apiKey);
     // const signer = new ethers.Wallet(key, alchemyProvider);
